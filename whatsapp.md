@@ -97,6 +97,24 @@ Once you have the full chat as JSON or SQLite, it's perfect input for the RAG pi
 Want me to sketch how to feed exported WhatsApp data into the Chroma setup from before?
 ```
 
+ANSWERS FROM CLAUDE:
+  Next step for you                                                                                                          
+                                                                                                                             
+  The only missing piece is your decrypted WhatsApp database. Since your phone isn't rooted, your best options:              
+                                                                                                                             
+  1. WhatsApp > Settings > Account > Request account info — they'll email you a key after a few days                         
+  2. Copy msgstore.db.crypt15 from Android/media/com.whatsapp/WhatsApp/Databases/ to your Mac
+                                                                                                                             
+  Once you have both, decrypt with:                         
+  cd whatsapp_rag                                                                                                            
+  wadecrypt <your_key> msgstore.db.crypt15 msgstore.db      
+                                                                                                                             
+  Then run the pipeline:
+  python parse_whatsapp.py --db msgstore.db --output chunks.json                                                             
+  python build_rag.py --input chunks.json                       
+  python query.py         
+
+
 === /question emails ===
 I want to also add emails to the RAG database. Should I do this using a separate RAG or the same RAG? I would like to proceed with the two concurrently if possible just to not be blocked.
 
