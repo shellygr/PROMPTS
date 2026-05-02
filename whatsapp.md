@@ -118,6 +118,18 @@ ANSWERS FROM CLAUDE:
 === /question emails ===
 I want to also add emails to the RAG database. Should I do this using a separate RAG or the same RAG? I would like to proceed with the two concurrently if possible just to not be blocked.
 
+ANSWER FROM CLAUDE:
+⏺ Good question. I'd recommend same ChromaDB instance, separate collection — this gives you:                               
+  - Independent ingestion pipelines (no blocking)
+  - Option to query one or both sources                                                                                      
+  - Same embedding model (BGE-M3) for consistency
+  - Easy to add a unified query mode later that searches both collections                                                    
+                                                                                                                           
+  For emails, what's your source? Gmail, Outlook, or local files (.mbox/.eml)? This determines the parsing approach.         
+                                                                                                                             
+  In the meantime, I can set up the email pipeline scaffold now so you can start ingesting emails while still waiting for the
+   WhatsApp DB. Want me to proceed?                                                                                          
+
 === /plan #2 ===
 Now, I want to also store my emails in the RAG database. I have a bunch of mbox files of google takeout instances. 
 You need to build chunks based on every email. Use subject, date, from, to list as additional metadata fields for each chunk. 
