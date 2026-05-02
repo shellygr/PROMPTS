@@ -1,9 +1,14 @@
+<!-- feature-loop: 65b9db66 -->
+
 === /plan #1 ===
 I want to build a tool that takes my whatsapp database and makes a RAG database. Then, I want to install locally using ollama a good hebrew model, since most messages are in hebrew.
 Here is some data from a previous conversation I had with claude:
 
 ```
-> How can I build a rag database from some knowledge base I have? How can I create embeddings? Using python12:14Claude responded: Building a RAG Database in PythonBuilding a RAG Database in Python
+> How can I build a rag database from some knowledge base I have? How can I create embeddings? Using python
+
+12:14
+Claude responded: Building a RAG Database in PythonBuilding a RAG Database in Python
 
 Here's a practical walkthrough. RAG = Retrieval-Augmented Generation: you embed your documents into vectors, store them, then retrieve the most relevant chunks at query time to feed an LLM.
 The pipeline

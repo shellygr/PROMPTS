@@ -1,0 +1,2 @@
+=== /plan #1 ===
+My colleague recommended that all database accesses done by preaudit would use HTTP requests. Basically, to assume it is part of the cloud-cli here `~/Certora/certora-cloud-cli`. Can you design this as a solution? Right now it's not implemented yet, but in order to allow this code to be used across our AWS Cloud and locally, it's best to make it work as part of certora-cloud-cli. 
