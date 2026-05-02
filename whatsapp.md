@@ -136,3 +136,44 @@ You need to build chunks based on every email. Use subject, date, from, to list 
 You can ignore attachment contents but you should take note of attachment names and file types. An email may have multiple attachments.
 It could be the case that I have many versions of the same inbox. So, you need to make sure to deduplicate entries.
 
+ANSWER FROM CLAUDE:
+  Done                                                                                                                       
+                                                                                                                             
+  New file: whatsapp_rag/parse_emails.py                                                                                     
+  - Parses .mbox files from Google Takeout                                                                                   
+  - Deduplicates across multiple exports using Message-ID header                                                             
+  - Extracts subject, date, from, to, cc, body text, and attachment metadata                                                 
+  - Handles multipart MIME, HTML→text fallback, charset decoding                                                             
+                                                                                                                             
+  Modified: whatsapp_rag/build_rag.py                                                                                        
+  - Added --source email flag                                                                                                
+  - Emails go into a separate email_messages collection                                                                      
+  - Uses upsert with Message-ID as doc ID (idempotent — safe to re-run)                                                      
+                                                                                                                             
+  Modified: whatsapp_rag/query.py                                                                                            
+  - Added --source flag: whatsapp, email, or all (default)                                                                   
+  - When all: queries both collections and merges results by relevance score                                                 
+                                                                                                                           
+  Usage                                                                                                                      
+                                                                                                                             
+  cd whatsapp_rag                                                                                                            
+                                                                                                                             
+  # 1. Parse your takeout mbox files                                                                                         
+  python parse_emails.py --mbox-dir ~/path/to/takeout/Mail/ --output email_chunks.json
+                                                                                                                             
+  # 2. Build the email RAG collection                                                                                      
+  python build_rag.py --source email --input email_chunks.json                                                               
+                                                                                                                           
+  # 3. Query (searches both email and WhatsApp by default)                                                                   
+  python query.py
+  python query.py --source email  # email only          
+  
+
+=== /plan #3 ===
+explore the effects of hebrew emails and russian emails. there are all kinds of encodings. we need to make sure not to get gibberish. remember the source is gmail.
+
+=== /plan #4 ===
+what about htmls with inline images and scripts and other fancy stuff? how can we be sure that we do not inject junk into our database?
+
+=== /question #5 ===
+what about quotes? are they automatically included? do we have a notion of threads like in gmail or is this pretty much lost and reliant on quotes existing? 
