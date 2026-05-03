@@ -172,8 +172,63 @@ ANSWER FROM CLAUDE:
 === /plan #3 ===
 explore the effects of hebrew emails and russian emails. there are all kinds of encodings. we need to make sure not to get gibberish. remember the source is gmail.
 
+ANSWER FROM CLAUDE:
+All encodings decode correctly:
+
+  - Hebrew UTF-8 subject "םלוע םולש" and body — correct
+  - Russian windows-1251 subject "Привет мир", from "Иван Петров", body — correct
+
+  - Hebrew ISO-8859-8-I (the tricky alias) subject "הקידב" and body "הכרבו םולש" —
+   correct
+  - Russian KOI8-R subject "Тестовое письмо", from "Ольга", body — correct
+
+  The fix handles all the common encoding scenarios from Gmail Takeout:
+  1. RFC 2047 encoded headers are now properly decoded via decode_header_value()
+  2. The iso-8859-8-i charset alias (common in Hebrew emails) is mapped to
+  iso-8859-8
+  3. Body decoding already worked but now also benefits from the charset
+  normalization
+
 === /plan #4 ===
 what about htmls with inline images and scripts and other fancy stuff? how can we be sure that we do not inject junk into our database?
+
+ANSWER FROM CLAUDE:
+
+⏺ Everything works. Here's a summary of what was fixed:
+
+  Done
+
+  The HTMLTextExtractor in parse_emails.py now filters out junk that would pollute
+   the RAG database:
+
+  ┌─────────────────────────────────────────┬─────────────────────────────────┐
+  │                Junk type                │               Fix               │
+  ├─────────────────────────────────────────┼─────────────────────────────────┤
+  │ Hidden preheader text                   │ Skipped via class="preheader"   │
+  │                                         │ detection                       │
+  ├─────────────────────────────────────────┼─────────────────────────────────┤
+  │ display:none elements                   │ Skipped via inline style        │
+  │                                         │ detection                       │
+  ├─────────────────────────────────────────┼─────────────────────────────────┤
+  │ Gmail quoted replies                    │ Skipped via class="gmail_quote" │
+  ├─────────────────────────────────────────┼─────────────────────────────────┤
+  │ Gmail signatures                        │ Skipped via                     │
+  │                                         │ class="gmail_signature"         │
+  ├─────────────────────────────────────────┼─────────────────────────────────┤
+  │ Zero-width Unicode chars (\u200b,       │ Stripped by clean_text()        │
+  │ \u200c, \ufeff, etc.)                   │                                 │
+  ├─────────────────────────────────────────┼─────────────────────────────────┤
+  │ Non-breaking spaces (\xa0)              │ Normalized to regular spaces    │
+  ├─────────────────────────────────────────┼─────────────────────────────────┤
+  │ Excessive whitespace/newlines           │ Collapsed (max 2 consecutive    │
+  │                                         │ newlines)                       │
+  ├─────────────────────────────────────────┼─────────────────────────────────┤
+  │ Scripts and style tags                  │ Already blocked (unchanged)     │
+  └─────────────────────────────────────────┴─────────────────────────────────┘   
+  
+  The depth-tracking approach (_skip_depth) correctly handles nested elements     
+  inside hidden regions, so deeply nested content in a display:none wrapper won't
+  leak through.                                                                   
 
 === /question #5 ===
 what about quotes? are they automatically included? do we have a notion of threads like in gmail or is this pretty much lost and reliant on quotes existing? 
