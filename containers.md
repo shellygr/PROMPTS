@@ -9,11 +9,12 @@ Let's focus on #1 for now.
 
 In this plan, we focus only on setting up the ci workflows that build both images and publish them. In general, we want to release only when tags on main are created. For testing, we also want to be able to manually dispatch the task so that we could operate on the test images.
 
-Plan the CI workflow.
+Explore the image definitions.
+Plan the CI workflow for building them.
 
 === /plan #2 ===
 Now, let's focus on planning the testing for bullet 1 out of plan #1. 
-It should be runnable both locally and in CI.
+It should be runnable both locally and in CI. it should run the SimpleVault contract of the dummy project.
 
 === /plan #3 ===
-After we completed plan #1 and #2 and just the first bullet out of #1, we need to plan the testing of the scenario described in the second bullet.
+After we completed plan #1 and #2 and just the first bullet out of #1, we need to plan the testing of the scenario described in the second bullet on the same contract as in plan #2. 
