@@ -230,5 +230,39 @@ ANSWER FROM CLAUDE:
   inside hidden regions, so deeply nested content in a display:none wrapper won't
   leak through.                                                                   
 
+
+--- detour backup to keys for whatsapp extraction --
+⏺ Short answer: Yes, ADB works on Mac, but there's a big caveat — Google disabled 
+  ADB backup (adb backup) on Android 12+, so if your phone is on Android          
+  12/13/14/15, this method likely won't work.                                     
+                                                                                  
+  Here's the situation:                                                           
+                                                                                  
+  What works on Mac:                                                              
+  - Install ADB: brew install android-platform-tools                              
+  - Enable USB Debugging on your phone                                            
+  - The old key extraction scripts (like WhatsApp-Key-DB-Extractor) run on macOS  
+                                                                                  
+  The problem:                                                                    
+  - These tools rely on adb backup which Google removed in newer Android versions 
+  - WhatsApp also stopped supporting ADB backup in recent versions                
+  - If your phone is Android 12+, you'll likely get an empty backup
+                                                                                  
+  Your best bet is the Google Drive route:                                        
+  1. Go to Google Takeout                                                         
+  2. Deselect all, then select only "WhatsApp Messenger"                          
+  3. Request the export                                 
+  4. The key file (encrypted_backup.key) should be in the resulting archive       
+                                                                           
+  What Android version is your phone running? And do you have WhatsApp Google     
+  Drive backups enabled?                                                          
+                                                                                  
+  Sources:                                                                        
+  - wa-crypt-tools (GitHub)
+  - WhatsApp-Key-DB-Extractor (GitHub)
+  - Backup and decrypt WhatsApp Android
+  - Android WhatsApp Forensics - Belkasoft     
+
+
 === /question #5 ===
 what about quotes? are they automatically included? do we have a notion of threads like in gmail or is this pretty much lost and reliant on quotes existing? 

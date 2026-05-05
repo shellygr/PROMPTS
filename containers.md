@@ -147,9 +147,31 @@ Look at the process here https://github.com/Certora/AIComposerRAGDBPublish
 locally in ~/certora/AIComposerRAGDBPublish
 you would need to first run it within the ci in that repo, then in the build process integrate it.
 
-=== /plan #2 ===
+=== /plan #2.1 ===
+I am not sure the github_token will successfully read the package for rag db.
+
+Part 1 (AIComposerRAGDBPublish CI)
+
+ 1. Push workflow, trigger workflow_dispatch
+ 2. Verify GitHub Release is created with both tarballs
+ 3. Verify tarballs contain valid ChromaDB files (chroma.sqlite3, fts_index.db, VERSION.json)
+
+ Part 2 (PreAudit Docker)
+
+ 1. Rebuild preaudit image with RAG DB bundled
+ 2. Verify CERTORA_RAG_DB is set and points to valid ChromaDB
+ 3. Run a test analysis to confirm RAG search works
+
+=== /plan #2.2 ===
+let's test rag db access works from docker. we need a dummy query to the analyzer and invoke it via the docker, and see we get a decent answer. show me the outputs.
+
+=== /plan #3 ===
 Now, let's focus on planning the testing for bullet 1 out of plan #1. 
 It should be runnable both locally and in CI. it should run the SimpleVault contract of the dummy project.
+
+
+=== /plan #3.1 ===
+let's add a test of AIComposer chromadb access like we did in #2.2.
 
 === /plan #3 ===
 After we completed plan #1 and #2 and just the first bullet out of #1, we need to plan the testing of the scenario described in the second bullet on the same contract as in plan #2. 
