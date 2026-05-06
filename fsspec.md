@@ -1,3 +1,5 @@
+<!-- feature-loop: 85ca9291 -->
+
 === /plan #1 ===
 A colleague proposed we use fsspec for dual lcoal filesystem/s3 update.
 What do you think if we used fsspec for some of the files we write in preaudit instead of syncing them via s3_sync.py? I thought about all the cache/state related writes in autosetup and preaudit. 
