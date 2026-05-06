@@ -10,5 +10,15 @@ finally, we should have proper CI test for this tool. when the time is right I w
 
 now that you know the overall picture start with the first goal and proceed with planning building the tool. we will continue with other tasks in further plans.
 
-=== /plan #2 ===
+=== /plan #2-results ===
+
+we need include a results diff in the report. this means comparing:
+1. the job status
+2. the total runtime
+3. the rules' results. you can use ProverOutputUtility functions such as get_all_checks to fetch from both
+3.1. you need to match on rule and method names. some rules are parametric. so, if the same rule and method appears in both runs but have different results, you need to show this side by side. 
+3.2. it could also be the case the set of rules and/or methods are different, which is also okay.
+
+=== /plan #3 ===
 let's use certora-fixconf from the autosetup dependency to try and handle cases where conf won't compile. plan and show me how you'd approach it.
+
