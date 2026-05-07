@@ -248,3 +248,11 @@ CACHE_FILES = [
  - Phase 1: All existing tests pass (mechanical refactoring). Run pytest tests/unit/ tests/integration/test_orchestrator_integration.py -v in both repos.
  - Phase 2-3: fsspec local mode is a thin wrapper — tests pass unchanged. For S3 mode, use fsspec.filesystem("memory") in unit tests.
  - Rename migration: Run PreAudit on dummyproject, verify caches are created under new names.
+
+=== /plan cachemanager siblings:autosetup ===
+ we discussed initially if we need the CacheManager class and we saw it is only used in tests.
+ Examine those tests. I want a report from you on whether those are actually testing things that occur in production code or not. Propose changes and extensions. In particular, you should answer the question of whether we can throw away the CacheManager class.  use a worktree in autosetup if you need to make changes    
+
+
+=== /plan fsspec-docs siblings:autosetup ===
+please update CLAUDE.md of both autosetup and preaudit with the files using fsspec, in particular what files managed by these tools should use fsspec, and which should not. explain what ContentCache is.

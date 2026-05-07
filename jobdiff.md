@@ -19,6 +19,8 @@ we need include a results diff in the report. this means comparing:
 3.1. you need to match on rule and method names. some rules are parametric. so, if the same rule and method appears in both runs but have different results, you need to show this side by side. 
 3.2. it could also be the case the set of rules and/or methods are different, which is also okay.
 
-=== /plan #3 ===
-let's use certora-fixconf from the autosetup dependency to try and handle cases where conf won't compile. plan and show me how you'd approach it.
+---
+SCRAPPED === /plan #3 ===
+SCRAPPED let's use certora-fixconf from the autosetup dependency to try and handle cases where conf won't SCRAPPED compile. plan and show me how you'd approach it.
+---
 
