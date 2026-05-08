@@ -1,3 +1,5 @@
+<!-- feature-loop: 0c4a0be7 -->
+
 === /plan #1 siblings:mutation_svelte ===
 
 Front page of AISSK should show how many checks passed and how many checks has failures for each repo. It should be based on the latest run commit and also show this latest run commit.
