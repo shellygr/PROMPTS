@@ -1,3 +1,5 @@
+<!-- feature-loop: dee319f2 -->
+
 === /plan data-management-extended ===
 You are now a senior software architect.
 we have a script called compare_folders_by_content.py that tells us whether all files from old folder are in the new folder by building hashing indices of each folder.
@@ -10,3 +12,5 @@ this script works very well but I would like to generalize it and superpower it 
 Do not change compare_folders_by_content.py, but plan a new python project, let's call it backup_helper, using https://github.com/cookiecutter/cookiecutter.
 
 In addition, plan a testing suite that will use DOCKER exclusively! You MUST NOT run it on real files.
+
+--------------------

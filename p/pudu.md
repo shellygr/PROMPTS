@@ -9,3 +9,5 @@ I am specifically curious about ways I could secure this better and easily. I am
 === /plan detect ===
 I want to send a representative thumbnail with the email. How can I do that?
 Plan.
+
+--------------------

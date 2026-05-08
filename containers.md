@@ -165,13 +165,14 @@ Part 1 (AIComposerRAGDBPublish CI)
 === /plan #2.2 ===
 let's test rag db access works from docker. we need a dummy query to the analyzer and invoke it via the docker, and see we get a decent answer. show me the outputs.
 
+=== /plan #2.3 ===
+let's add a test of AIComposer chromadb access like we did in #2.2.
+
+--------------------
+
 === /plan #3 ===
 Now, let's focus on planning the testing for bullet 1 out of plan #1. 
 It should be runnable both locally and in CI. it should run the SimpleVault contract of the dummy project.
 
-
-=== /plan #3.1 ===
-let's add a test of AIComposer chromadb access like we did in #2.2.
-
-=== /plan #3 ===
+=== /plan #4 ===
 After we completed plan #1 and #2 and just the first bullet out of #1, we need to plan the testing of the scenario described in the second bullet on the same contract as in plan #2. 

@@ -16,3 +16,5 @@ The source of the pictures is potentially a remote-located directory on the loca
 This is a complex project with many separate components.
 You need to write a large plan file detailing each and every step with maximal detail. There are multiple components here.
 Think about my user experience from the moment I select the collections, add new ones to update the database, manually fix or craft additional information, face detection, integrating into the RAG DB (continuously updating with new photos and info on them), and the user facing application of answering questions, with Hebrew support too. Spend as much time as needed on it to make the plan as comprehensive as possible. I will not be available to answer your questions, so please state them directly in the plan, and tomorrow I will respond to you.
+
+--------------------

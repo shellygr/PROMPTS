@@ -24,3 +24,4 @@ SCRAPPED === /plan #3 ===
 SCRAPPED let's use certora-fixconf from the autosetup dependency to try and handle cases where conf won't SCRAPPED compile. plan and show me how you'd approach it.
 ---
 
+--------------------

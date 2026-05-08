@@ -266,3 +266,5 @@ ANSWER FROM CLAUDE:
 
 === /question #5 ===
 what about quotes? are they automatically included? do we have a notion of threads like in gmail or is this pretty much lost and reliant on quotes existing? 
+
+--------------------
