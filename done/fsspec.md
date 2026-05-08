@@ -256,3 +256,5 @@ CACHE_FILES = [
 
 === /plan fsspec-docs siblings:autosetup ===
 please update CLAUDE.md of both autosetup and preaudit with the files using fsspec, in particular what files managed by these tools should use fsspec, and which should not. explain what ContentCache is.
+
+=== DONE ===
