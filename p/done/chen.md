@@ -49,5 +49,16 @@ ANSWER FROM CLAUDE:
 
 -----------------
 
+=== /plan musical ===
+toddler loves it! I want to enhance the experience. let's make keys 1-0 to be ranging from C, D, E, ... rising notes, then keys Q, W, ...to also be C, D, E on a lower octave (yes there'll be overlap with higher keys); then keys A, S, ...  yet another lower octave and finally keys Z, X, C, ... so basically every row is a lower octave plus some more notes after that. go from C to B all the way through in each row. I don't care much what sounds will be made by the other keys as long as main qwerty and num row is sorted. /effort max
+
+=== /plan animals ===
+can you add a random animal to show up every 31 keystrokes? tiger, cat, dog, horse, sheep, cow, parrot, bear, wolf. /effort max
+
+
+=== /question ===
+now, when baby visits me, I need to quickly turn this on! can you help me create a shortcut in macos that will 
+ trigger this app on screen 2 or if not available then the only available screen? something like                 
+cmd+optionshift+c if it does not collide with anything 
 
 === DONE ===

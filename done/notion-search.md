@@ -6,3 +6,5 @@ I want to use the local model to query into notion, maybe having some sort of mc
 Do I have the right mental model for the solution here? Ho would you approach it?
 
 ------------------------
+
+=== DONE ===
