@@ -35,6 +35,7 @@ for a certora user, Usage Statistics + Organizations + Users will stay in the sa
 === /plan feedback-flows ===
 I played with the frontend to simulate all kinds of user flows.
 
+# settings
 from a repo, user clicking settings always reaches the main settings page. this makes no sense. we should have a separate page for global configuration with the following:
 Global settings
 Default static analysis settings:
@@ -60,3 +61,49 @@ static analysis:
 
 ai auditor settings:
 show everything we had from the main page of settings, but for a particular repo we allow to define the extra scope
+
+# new repos
+- I tried to add openzeppelin but it has no mocked commits so i cannot run. it's also weird it shows "This is not the latest commit" message when there are 0 commits. fix it.
+- it's weird it allows clicking "Start Run" with no commit selected.
+- remove the estimated cost label. not useful
+
+------------------------
+
+=== /plan fix-reports ===
+the reports are broken. a blank screen is opened.
+
+
+=== /plan feedback-from-colleagues ===
+- in AI Auditor configurations, remove AI Auditor effort level and the other settings. 
+The only settings is a radio selection that says either of two options
+1. Analyze all contracts in the repository
+2. Analyze only contracts listed for static analysis
+
+Option 2 is only available if we defined contracts for static analysis.
+
+- in Static analysis report:
+- - the Verified tab should be 3rd
+- - keep only high priority, low priority, verified tabs. instead of the rest, add a "+ Additional Views" tab which opens a menu with additional views - Input Validation, One-Time Functions, Results By Function, Rounding Analysis Viewer
+- - update the title to include Certora AI Security Suite Static Analysis Report
+- - add some margins between the rows in the header
+- - remove the number of total rules checked.
+- - "X iterations/rule" becomes "X AI judgement iterations per finding"
+- - Remove "Jobs analyzed"
+- - "Generated [date]" becomes "Report generated at [date]"
+
+- main page:
+- - the settings page from the "..." next to each repo goes to global settings instead of the repo's settings.
+- - the label under "..." should be "Project Settings" not "Open Settings".
+
+=== /plan verified-tab ===
+the verified tab currently does not account for dismissed findings. i.e. if you dismiss a finding, it should not count negatively.. i.e if total verified + total dismissed = total # of findings of the checker , it means we have 100% coverage. worth using 'grey' color to indicate the dismissed ones but still show 100%.
+
+=== /plan priority-tabs ===
+add a chcekbox in the toc in high priority, low priority tabs that allows to group findings by checker, and within each checker group to sort as usual in descending confidence order. each group should be titled with the checker name.
+
+=== /plan onetime-count ===
+ I tried to dismiss all and I still don't get 100% in verified tab. turns out one-time do not show up in low priority. this should be changed actually. all findings should be in one of the         
+priority tabs. 
+
+=== /plan judge-integration ===
+in the findings view, do not show judge validation section at all. impact and likelihood section should be folder under detailed analysis section

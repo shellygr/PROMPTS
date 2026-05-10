@@ -1,4 +1,6 @@
-=== /plan pou-skills siblings:ProverOutputUtility ===
+<!-- feature-loop: 4fea1a2a -->
+
+=== /plan pou-skills siblings:ProverOutputUtility siblings:ctac-fly ===
 consider www.github.com/1arie1/ctac-fly as a template for good claude skills repo.
 in parallel, look at this ProverOutputUtility repo and what it allows people to investigate about prover jobs as a whole.
 I want you to convert the APIs to skills using the same format as the claude skills repo, and make the skills easily installable.

@@ -176,3 +176,14 @@ It should be runnable both locally and in CI. it should run the SimpleVault cont
 
 === /plan #4 ===
 After we completed plan #1 and #2 and just the first bullet out of #1, we need to plan the testing of the scenario described in the second bullet on the same contract as in plan #2. 
+
+=== /plan unrecorded-mocks ===
+
+i added support for LLM_BACKEND=mock
+
+=== /plan autodispatcher ===
+
+We need to decide if we want to have `--auto_dispatcher` in `_PREAUDIT_EXTRA_ARGS`. The pros is that it already works like this for a while. the cons is that it can be less precise and more costly.
+so for example, most generic rules do not care about links. e.g. input validation relies on the unresolved harness and we want to keep it this way.
+but AutoCVL rules would really enjoy better linking.
+it depends how we run autosetup here. if we run it with the main contract as --main-contract and let autosetup build a full signature database and perform full linking, no need for auto_dispatcher. if not, and we only analyze just one contract, then auto_dispatcher is irrelevant. I am concluding that we can probably safely remove this option. If I am not mistaken there is a hidden option for contract exploration that permits building more full linking called `--contract_exploration`. We would need to investiagte wheter we should turn it on by default or not.
