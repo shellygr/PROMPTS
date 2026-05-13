@@ -107,3 +107,18 @@ priority tabs.
 
 === /plan judge-integration ===
 in the findings view, do not show judge validation section at all. impact and likelihood section should be folder under detailed analysis section
+
+-------
+
+=== /plan landing-page-2 ===
+Let's beef up the landing page a bit. 
+1. Get started button - text looks ugly. should be emphasized and centered. 
+2. the 3 boxes static analyzer, ai auditor are pretty good. For static analysis, drop reentrancy and access control and CEI. Focus on input validation, arithmetic safety, and rounding analysis. Low noise, prioritized results. Instead of rounding analysis box, put AutoProver - "Automated specification inference and verification, powered by the Certora Prover. The only tool that can guardrail your code against exploits and future-proof it from ever-improving AI agents."
+3. How it works - pretty good - but instead of 2 - just "Select contracts to monitor". Drop 3.
+4. instead of 40+ Built-in security checkers, put something like: "Made by Certora, the team behind the Certora Prover. Trusted by the best of DeFi." Then put logos of Aave, Lido, EigenLayer, Compound, EtherFi, Safe, Veda, ENS, Curve, Uniswap, Euler, Morpho, Kamino, Squads, Jito, Polygon, Polymarket, Solana Foundation, Mysten. (I suggest you sort alphabetically.)
+
+
+=== /plan testing-prepass ===
+~I think it's time we do~
+
+WE ARE MOVING TO ZEUS INFRA
