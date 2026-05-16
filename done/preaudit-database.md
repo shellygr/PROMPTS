@@ -46,3 +46,7 @@ def create_finding(fingerprint: str, rule_name: str) -> Finding:
 ```
 
 maybe you can even automatically intercept the http calls in local mode and 'implement' the API, so that we can keep the code clean with just http calls.
+
+
+
+=== DONE ===

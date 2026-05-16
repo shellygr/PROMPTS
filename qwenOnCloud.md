@@ -86,6 +86,11 @@ Steps the **user** runs manually (no code changes here):
      export CUSTOM_ON_CLOUD_BASE_URL=https://api.together.xyz/v1
      export CUSTOM_ON_CLOUD_MODEL=Qwen/Qwen2.5-72B-Instruct
      ```
+
+preaudit-dev tgp_v1_8IXhdLQcYNbjDnQknhVcaKvB-CTIWnc8CfLyPVVmaao
+preaudit-ci tgp_v1_-7wYDfvp5nYhYr8Cv74__SXMAtFgqOgX5fkBTVVOQD0
+
+
 4. **Verify connectivity** without committing the key — one-liner:
    ```bash
    curl -sS https://api.together.xyz/v1/chat/completions \
@@ -330,3 +335,23 @@ Constraints:
 
 
 ------------------
+
+
+my next task is to properly track usage.
+
+few comments on the plan to add usage tracking.
+1. We should whitelist models to avoid a situation where pricing is computed incorrectly. when proverlite starts, validate the model values if they are to be used here. do it as early as possible before we spent compute cycles on other activities.
+2. yes I confirm the $2in/$2out price. we want the code-tuned model.
+
+---------------
+few comments on the plan to add usage tracking.
+1. We should whitelist models to avoid a situation where pricing is computed incorrectly. when proverlite starts, validate the model values if they are to be used here. do it as early as possible before we spent compute cycles on other activities.
+2. yes I confirm the $2in/$2out price. we want the code-tuned model.
+
+
+------------------
+the other task would be to get rid of MODEL_SONNET so that we have the default Anthropic model selected by an env var and definable by default to MODEL_SONNET but still defined just once.
+
+------------------
+
+do the same check for roundabout LLM calls. iirc they should mirror usual runs from Prover orchestration. 

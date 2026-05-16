@@ -163,3 +163,4 @@ Prelim claude discovery/exploration:
   - Judge rubric implications for wrappers — "always name the mechanism," "always include file+line."
   - Notes on recall-only scoring (more findings doesn't hurt) and not padding.
 
+-----------------------------
