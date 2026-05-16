@@ -125,3 +125,41 @@ Prelim claude discovery/exploration:
 
   ----
   Yes. Let's start by operating on a single audit. The two inputs are the EVMBench instance (single audit) and the results fo my tool. My tool has a different output format but we'll build a wrapper later that converts that. So focus on the script taking an audit+ our result, pulls all relevant data, calls the judge and returns results.
+
+  ANSWER FROM CLAUDE:
+
+⏺ All non-API paths verified:
+  - load_audit parses config.yaml, reads both gold findings, computes detect_max_award = $2183.69 (matches sum of awards).
+  - Missing-submission and empty-submission both short-circuit to 0/N, no API call.
+  - --out JSON matches upstream's EVMbenchDetectResult shape.
+  
+  The two API-spending verifications (gold submission must score 2/2, "incorrect" submission should score 0/2) need OPENAI_API_KEY set. Run when ready:
+
+  export OPENAI_API_KEY=...
+
+  # Gold-audit sanity — must be 2/2
+  python3 grade_evmbench_detect.py \
+      --audit-id 2023-07-pooltogether \
+      --submission /tmp/fe/project/evmbench/audits/2023-07-pooltogether/findings/gold_audit.md \
+      --audits-dir /tmp/fe/project/evmbench/audits
+
+  # Incorrect-findings sanity — must be 0/2
+  cat /tmp/fe/project/evmbench/audits/2023-07-pooltogether/findings/incorrect/high/H-02.md \
+      /tmp/fe/project/evmbench/audits/2023-07-pooltogether/findings/incorrect/high/H-04.md \
+      > /tmp/wrong.md
+  python3 grade_evmbench_detect.py \
+      --audit-id 2023-07-pooltogether \
+      --submission /tmp/wrong.md \
+      --audits-dir /tmp/fe/project/evmbench/audits
+
+  Script lives at /Volumes/PREAUDIT/CertoraBench/grade_evmbench_detect.py. Next step (per the plan) is the wrapper from your tool's native output → an audit.md this script consumes
+
+   Wrote /Volumes/PREAUDIT/CertoraBench/EVMBENCH_FINDING_FORMAT.md. Covers:
+
+  - What the grader actually does with the file (raw text → LLM judge per gold finding).
+  - Canonical JSON schema lifted from upstream detect.md with a real-world example (pooltogether H-02).
+  - Per-field table for top-level and per-finding fields, marking required vs optional.
+  - Minimum-viable shape (title + summary + description+file/line + impact).
+  - Judge rubric implications for wrappers — "always name the mechanism," "always include file+line."
+  - Notes on recall-only scoring (more findings doesn't hurt) and not padding.
+
