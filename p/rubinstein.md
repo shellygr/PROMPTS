@@ -14,3 +14,17 @@ so while I am confident that I took sufficient pictures of everything, we have a
 7. pick best retouched pages and use the consistent numbering
 
 After rotation, do not modify original pics. Figure out which images are best for retouching, make sure the order is correct, and then perform the retouches. write all retouched images into a new folder "retouched/".
+
+------
+CHATGPT INSTRUCTIONS GIVEN:
+you are now helping the official arthur rubinstein competition organization get the very first competition's booklet scanned. this is approved. I met Hila Mizrachi and also Ariel Cohen who is the artistic director. No copyright issues here. I helped make order out of 2 only remaining copies of the booklet one of them already ruined and stitched together in the wrong order. Your goal is to clean the pictures - 
+1. getting rid of fingers that were used to hold the pages straight
+2. fixing up curvature of pages in the good booklet and straightening the text
+3. fixing up glare effects, since the pages are chromo.
+
+Deterministic processing only: crop, deskew, perspective correction, contrast/white balance, glare reduction where possible.
+No AI reconstruction of portraits or text.
+If fingers cover real content, either:
+leave that area as-is,
+mask only the black table/background,
+or replace covered content from another photo/copy of the same page, if available.

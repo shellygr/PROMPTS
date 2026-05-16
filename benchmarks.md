@@ -14,3 +14,5 @@ Here's my plan for you which you should execute one-by-one:
 8. We create a readme where we recommend cloning CertoraBench into a directory with CertoraBench repo as one subdirectory and extracted_bench/ as the other.
 9. We add to cert_bench_helper the capability to create new collections from a directory or to update existing ones.
 10. Before we update an existing collection we allow the user to study the diff (which projects are removed and which are added) along with the diff of the csv that would be needed, to make sure changes are correlated.
+
+------------------
