@@ -181,6 +181,8 @@ After we completed plan #1 and #2 and just the first bullet out of #1, we need t
 
 i added support for LLM_BACKEND=mock
 
+--------------------
+
 === /plan autodispatcher ===
 
 We need to decide if we want to have `--auto_dispatcher` in `_PREAUDIT_EXTRA_ARGS`. The pros is that it already works like this for a while. the cons is that it can be less precise and more costly.
