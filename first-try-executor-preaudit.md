@@ -1,3 +1,5 @@
+<!-- feature-loop: 99df46f6 -->
+
 === /plan first-try ===
 Let's fix up the saas entrypoints.
 1. instead of the current env vars that match the names below, we want to use these names:
@@ -29,3 +31,21 @@ def zip_and_upload(folder: Path, save_url: str | None = None) -> None:
 
 review the needed changes to BUILDER only in this stage.
 What are complications and risks? note we do not have anything in production yet, but we would need to make sure the testing via localstack can work still.
+
+-----------------------
+
+=== /plan envvars ===
+Let's rename some environment variables both here and in preaudit. add the prefix `PREAUDIT_` to:
+- LLM_BACKEND
+- ANTHROPIC_MODEL
+- CUSTOM_ON_CLOUD_* (all of them)
+- LLM_PROCESSING
+- LOCAL_LLM_BASE_URL
+- LOCAL_LLM_MODEL
+- USE_AICOMPOSER
+
+Add the prefix `AUTOSETUP_` to ALL_LOGS_IN_STDOUT
+
+=== /plan getridofmanifest ===
+
+We want to get rid of the manifest file. assume all settings will be passed as env vars, separate ones for each field in the manifest.
