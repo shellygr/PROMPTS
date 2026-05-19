@@ -49,3 +49,5 @@ Add the prefix `AUTOSETUP_` to ALL_LOGS_IN_STDOUT
 === /plan getridofmanifest ===
 
 We want to get rid of the manifest file. assume all settings will be passed as env vars, separate ones for each field in the manifest.
+
+-----------------------

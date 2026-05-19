@@ -87,10 +87,6 @@ Steps the **user** runs manually (no code changes here):
      export CUSTOM_ON_CLOUD_MODEL=Qwen/Qwen2.5-72B-Instruct
      ```
 
-preaudit-dev tgp_v1_8IXhdLQcYNbjDnQknhVcaKvB-CTIWnc8CfLyPVVmaao
-preaudit-ci tgp_v1_-7wYDfvp5nYhYr8Cv74__SXMAtFgqOgX5fkBTVVOQD0
-
-
 4. **Verify connectivity** without committing the key — one-liner:
    ```bash
    curl -sS https://api.together.xyz/v1/chat/completions \
