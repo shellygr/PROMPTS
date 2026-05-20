@@ -41,6 +41,18 @@ score below 40. so if we had a false positive finding with score higher than 40 
 bring it to below 40, and introducing a bug should make it go above 40. even if the diff is 41-39 that's ok
 and passes our test. 
 
+================
+
+......
+
+we need to be more serious about the way we count tokens.
+Since we understand pricing changes, the _cost_usd field could be computed incorrectly.
+the _tokens fields are not helpful because they conflate input, output, cache read and cache write tokens
+all together. we should store FULL information. One option is to add fields for each token type.
+Another option is to add dictionary entries with equal format for each type. it seems the better solution to me.
+in the meantime to avoid backward compatibility issues, name the new suffix _tokens_breakdown and 
+keep reporting total tokens.
+
 
 ......
 
