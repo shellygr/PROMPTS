@@ -53,6 +53,12 @@ Another option is to add dictionary entries with equal format for each type. it 
 in the meantime to avoid backward compatibility issues, name the new suffix _tokens_breakdown and 
 keep reporting total tokens.
 
+......
+
+
+cost_usd recomputation utility in this PR. The breakdown is the
+ enabler; an actual recompute_cost_from_report(...) helper can be a
+ follow-up — small and pure once the data is captured.
 
 ......
 
