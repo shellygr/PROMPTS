@@ -41,7 +41,7 @@ score below 40. so if we had a false positive finding with score higher than 40 
 bring it to below 40, and introducing a bug should make it go above 40. even if the diff is 41-39 that's ok
 and passes our test. 
 
-================
+--------------------------------
 
 ......
 
@@ -55,12 +55,64 @@ keep reporting total tokens.
 
 ......
 
+--------------------------------
 
-cost_usd recomputation utility in this PR. The breakdown is the
- enabler; an actual recompute_cost_from_report(...) helper can be a
- follow-up — small and pure once the data is captured.
+Your task now is to help ship real tools in an easy smooth way to our colleagues at Certora.
+For ~/certora/autosetup, ~/certora/preaudit, ~/certora/proverswissarmyknife and ~/certora/localdashboard, I want to allow uv tool installation.
+In localdashboard we have jobdiff,
+in autosetup we have fixconf and autosetup,
+in preaudit we have autobuild, and potentially also a violation analyzer we could install.
+Finally, we have the proverswissarmyknife skills that need some guidance for installation.
 
-......
+Your goal is to update the settings, uv.lock, and whatever may be necessary to support not just installation via pip but also via uv, as this is how our non-dev colleagues will get these tools.
+It is important not to forget the uninstall and upgrade processes as well.
+
+After you created PRs in each of the repos I mentioned, please also generate a slack message with all the tools that they can get by following the installation.
+
+Finally, create a docker script that will try to fetch all of these tools into the fresh docker environment, and will make sure they actually work, given that my personal environment already has everything installed and is thus 'contaminated' for testing purposes.
+
+
+ANSWER FROM CLAUDE:
+PRs opened
+  
+  ┌─────┬──────────────────────┬──────┬────────────────────────────────────────────────────────────────┐
+  │  #  │         Repo         │  PR  │                             Title                              │
+  ├─────┼──────────────────────┼──────┼────────────────────────────────────────────────────────────────┤
+  │ 1   │ AutoSetup            │ #64  │ Add uv tool install support + autosetup/fixconf short aliases  │
+  ├─────┼──────────────────────┼──────┼────────────────────────────────────────────────────────────────┤
+  │ 2   │ ProverOutputUtility  │ #41  │ docs: switch README to uv tool install for end users           │
+  ├─────┼──────────────────────┼──────┼────────────────────────────────────────────────────────────────┤
+  │ 3   │ LocalDashboard       │ #4   │ Add uv tool install support + jobdiff short alias              │
+  ├─────┼──────────────────────┼──────┼────────────────────────────────────────────────────────────────┤
+  │ 4   │ timeout-squad        │ #37  │ docs: switch timeouter README to uv tool install               │
+  ├─────┼──────────────────────┼──────┼────────────────────────────────────────────────────────────────┤
+  │ 5   │ PreAudit             │ #340 │ Add analyze-violation CLI + uv tool install support            │
+  ├─────┼──────────────────────┼──────┼────────────────────────────────────────────────────────────────┤
+  │ 6   │ ProverSwissArmyKnife │ #7   │ docs: switch to uv tool install + PreAudit's analyze-violation │
+  └─────┴──────────────────────┴──────┴────────────────────────────────────────────────────────────────┘
+
+  What got built
+
+  - Short aliases: autosetup, fixconf (AutoSetup), autobuild (PreAudit), jobdiff (LocalDashboard) added next to the existing certora-* console_scripts.
+  - New analyze-violation CLI in PreAudit: standalone wrapper around AIViolationAnalyzer.analyze_violation_group_two_step with argparse surface matching the legacy
+  Certora/ViolationAnalyzer-release wheel. 19 new unit tests, all passing. Threaded ecosystem through the analyzer so --ecosystem solana|move|soroban actually works.
+  - uv.lock committed in AutoSetup, LocalDashboard, PreAudit (skipped in POU/timeout-squad — no dev-workflow change). LocalDashboard's PreAudit SHA pin was bumped from the unreachable d249511
+   to current main 264a16f so lock generation succeeds.
+  - READMEs in all six repos now front uv tool install / upgrade / uninstall and keep pip as a documented legacy fallback. Deprecation note for certora-violation-analyzer everywhere it
+  matters.
+  - Docker clean-room test at PreAudit/scripts/{Dockerfile.uv-test,test_uv_tool_install.sh,test_uv_tool_install_inner.sh}: builds python:3.12-slim with uv==0.9.13 pinned, mounts the host SSH
+  agent, installs every tool, exercises every shim with --help, runs upgrade/uninstall, prints a summary table, exits non-zero on first failure.
+  - Slack message at PreAudit/mockups/uv-tool-install-slack.md: one install line per tool + upgrade/uninstall covered once + the SSH preflight + the certora-violation-analyzer deprecation
+  warning.
+
+  Merge order (load-bearing)
+
+  1. AutoSetup #64, ProverOutputUtility #41, timeout-squad #37, LocalDashboard #4 — independent, parallel.
+  2. PreAudit #340 — provides the new analyze-violation CLI.
+  3. PSAK #7 — must merge after PreAudit #340 (the skill PR references the new CLI).
+  4. Then post the Slack message and run ./scripts/test_uv_tool_install.sh from PreAudit/main.
+
+----------------------------
 
 land installations for all things. uv? pip? get it sorted out already
 
@@ -69,9 +121,18 @@ land installations for all things. uv? pip? get it sorted out already
 3. proverswissarmyknife
 4. [later] local dashboard
 
+.....
+
+
+in noFrontRun - no reason for g not to be a fallback function. this is reducing coverage if we omit g as fallback.
 
 ......
 
+cost_usd recomputation utility in this PR. The breakdown is the
+ enabler; an actual recompute_cost_from_report(...) helper can be a
+ follow-up — small and pure once the data is captured.
+
+......
 
 preaudit-dev tgp_v1_8IXhdLQcYNbjDnQknhVcaKvB-CTIWnc8CfLyPVVmaao
 preaudit-ci tgp_v1_-7wYDfvp5nYhYr8Cv74__SXMAtFgqOgX5fkBTVVOQD0
