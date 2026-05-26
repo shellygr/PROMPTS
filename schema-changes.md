@@ -51,3 +51,10 @@
   Current situation:
   1. PREAUDIT_S3_PREFIX is used for fsspec and all cache is written there. WRONG.  It is keyed by workflow_id and thus not suitable for cache which is shared across tuples <user,repo,contract>, but not the commit. workflow is unique per commit too.
   2. PREAUDIT_REPO_CACHE_PREFIX is used to upload the certora/ folder via zip. WRONG. The cloud didn't set it yet, and certora/ is not the only thing we cache. We also do not want to use zip here but just copy with fsspec.
+  3. payload_urls are referencing to files in cache that can get modified with new commits incoming. WRONG. Should be a path that won't be modified.
+
+  CHANGES:
+  1. PREAUDIT_S3_PREFIX will store RESULTS. fsspec, during run of preaudit, will NOT write to PREAUDIT_S3_PREFIX. Instead, it will write to PREAUDIT_REPO_CACHE_PREFIX.
+  2. Instead of the zip upload to PREAUDIT_REPO_CACHE_PREFIX, we will instead sync relevant files from the cache into PREAUDIT_S3_PREFIX from PREAUDIT_REPO_CACHE_PREFIX or from the local filesystem. These are:
+  - the certora/ folder that we currently zip. we will mirror the structure in PREAUDIT_S3_PREFIX
+  - all files that are CURRENTLY referenced by payload_urls. These files should be copied by fsspec to PREAUDIT_S3_PREFIX and the payload_urls should refer to the paths on PREAUDIT_S3_PREFIX.
