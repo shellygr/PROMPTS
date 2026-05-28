@@ -58,3 +58,12 @@
   2. Instead of the zip upload to PREAUDIT_REPO_CACHE_PREFIX, we will instead sync relevant files from the cache into PREAUDIT_S3_PREFIX from PREAUDIT_REPO_CACHE_PREFIX or from the local filesystem. These are:
   - the certora/ folder that we currently zip. we will mirror the structure in PREAUDIT_S3_PREFIX
   - all files that are CURRENTLY referenced by payload_urls. These files should be copied by fsspec to PREAUDIT_S3_PREFIX and the payload_urls should refer to the paths on PREAUDIT_S3_PREFIX.
+
+  -----
+
+good plan!
+comments:
+  the certora folder needs to be copied locally when restarting, because prover needs it locally, not in s3.
+  but the other files are taken via fsspec and should not be mirrored.
+
+  i am concerned about the fix for init_cache_fs. study the situation in ~/certora/autosetup, and make a plan to fix in both repos to make it idempotent and always take into account the env vars that determine if we're local or saas.
