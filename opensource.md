@@ -129,3 +129,28 @@ proverlite-release is no longer relevant. we can scrub it.
 Our strategy would be to create a mirror repository at github.com/Certora/StaticAnalyzer. So we would be able to get rid of the problems of internal docs etc.
 I suggest, beyond what I mentioned above, that you make a markdown OPENSOURCE_STRATEGY.md listing all steps needed to open source, what should be omitted, and what not.
 I am not concerned about the strategic risk. The prompts are so far very basic. The value will come from fine-tuned models on a large set of examples.
+
+
+--------------------
+
+=== /plan open-source certora-cloud-cli ===
+Look into this repo. It contains information about our AWS infrastructure which I prefer to keep confidential. 
+Show me how you plan to split the AWS parts into a separate repo certora-cloud-cli-internal, including code and documentation and anything else that should not be open source.
+Then, create a new folder ~/Certora/certora-cloud-cli-internal that is basically the confidential parts + dependency on current certora-cloud-cli. 
+Now, because we're still doing work on top of certora-cloud-cli and may do it for a while before the final go, we need to mirror current certora-cloud-cli into a new repo certora-cloud-cli-pub,
+which you'll put locally in ~/Certora/certora-cloud-cli-pub. In that new repo, REMOVE all the confidential parts. This will eventually become the new certora-cloud-cli once we're ready.
+Write a document that describes the split and how to append new commits from certora-cloud-cli to either certora-cloud-cli-internal or certora-cloud-cli-pub.
+
+
+=== /plan os-followup-pou ===
+Look at opensource_assessment.md. We now have certora-cloud-cli-pub repo and internal folder ~/certora/certora-cloud-cli-pub. Let's change pyproject.toml to use it instead. This repo will also become public.
+Would you recommend keeping readthedocs for the open source or remove it?
+email in pyproject toml-  is it standard practice to use a generic email such as info@certora.com?
+
+
+- License files
+- license headers in each file?
+- mirror from public to private
+- code hygiene process in the private branch
+- secret docs in the private branch
+- test splitting
