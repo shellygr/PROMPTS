@@ -154,3 +154,11 @@ email in pyproject toml-  is it standard practice to use a generic email such as
 - code hygiene process in the private branch
 - secret docs in the private branch
 - test splitting
+
+Ondrej:
+- Pypi supply chain attacks - if we do not upload to pypi
+- Graphcore from github, should be Certora prefix for pypi package, same for all others.
+
+separate code from tests/ci for ProverOutputUtility, which will have a public repo named ProverCLI, package name certora-prover-cli.
+
+separate code from tests/ci for Autosetup, which will have a public repo named SolidityProverAutosetup, package name certora-
