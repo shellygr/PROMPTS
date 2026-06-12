@@ -264,26 +264,41 @@ def render_field_value(fv):
     return str(raw)
 
 
-def latest_per_field(field_values):
-    """Field values are effective-dated; keep the most recent one per field type.
+def group_fields(field_values):
+    """Group an employee's effective-dated field values by field type.
 
-    Sort key prefers effectiveDate, tie-breaks on updatedAt (ISO strings sort
-    chronologically). Returns a list ordered by (context, fieldName)."""
+    Each group is sorted oldest→newest so the full history is preserved. Sort
+    key prefers effectiveDate, tie-breaks on updatedAt (ISO strings sort
+    chronologically). Returns a list of (fieldType, [values]) ordered by
+    (context, fieldName)."""
+    def vkey(fv):
+        return (fv.get("effectiveDate") or "", fv.get("updatedAt") or "")
+
     by_type = {}
     for fv in field_values:
-        ftid = fv.get("employeeFieldTypeId")
-        key = (fv.get("effectiveDate") or "", fv.get("updatedAt") or "")
-        cur = by_type.get(ftid)
-        if cur is None or key >= cur[0]:
-            by_type[ftid] = (key, fv)
+        by_type.setdefault(fv.get("employeeFieldTypeId"), []).append(fv)
 
-    chosen = [fv for _, fv in by_type.values()]
+    groups = []
+    for vals in by_type.values():
+        vals.sort(key=vkey)
+        ft = (vals[-1].get("employeeFieldType")) or {}
+        groups.append((ft, vals))
 
-    def sort_key(fv):
-        ft = fv.get("employeeFieldType") or {}
-        return (ft.get("context") or "", ft.get("fieldName") or "")
+    groups.sort(key=lambda g: ((g[0].get("context") or ""), (g[0].get("fieldName") or "")))
+    return groups
 
-    return sorted(chosen, key=sort_key)
+
+def render_field_history(vals):
+    """Render a field's current value, or its full effective-dated history when
+    more than one value exists. `vals` is oldest→newest."""
+    if len(vals) == 1:
+        return render_field_value(vals[0])
+    parts = []
+    for fv in vals:
+        eff = (fv.get("effectiveDate") or "")[:10]  # date part only
+        label = eff if eff else "initial"
+        parts.append(f"{label}: {render_field_value(fv)}")
+    return " → ".join(parts)
 
 
 def render_date_part(part):
@@ -351,13 +366,12 @@ def build_markdown(employees, anniversaries, reasons, bookings, source_url):
             L.append(f"- Work status: {e['workStatus']}")
         L.append("")
 
-        fields = latest_per_field(e.get("employeeFieldValues") or [])
-        if fields:
+        groups = group_fields(e.get("employeeFieldValues") or [])
+        if groups:
             L.append("| Field | Value |")
             L.append("| --- | --- |")
-            for fv in fields:
-                ft = fv.get("employeeFieldType") or {}
-                L.append(f"| {cell(ft.get('fieldName'))} | {cell(render_field_value(fv))} |")
+            for ft, vals in groups:
+                L.append(f"| {cell(ft.get('fieldName'))} | {cell(render_field_history(vals))} |")
             L.append("")
 
         annis = annis_by_emp.get(eid) or []
