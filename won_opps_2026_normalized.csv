@@ -1,0 +1,65 @@
+close_date,opportunity,account,service,weeks,normalized_usd,signed_total_usd,sf_amount_usd,discount_captured,verified
+2026-01-07,Ether.fi Enterprise 2026,Ether.fi,ENT (Audit+FV+Prover),18,360000,360000,540000,-180000 (33%),yes
+2026-01-07,Light CToken V3 Extension,Light Protocol,AUD,3.5,70000,70000,70000,-35000 (line),yes
+2026-01-12,AAVE v3.6 Audit+FV,BGD/Aave,AUD+FV (gov payload),,30400,30400,30400,none,yes
+2026-01-14,Veda - Boring Vault Yield Streaming,Veda,AUD,1.5,45000,125000,125000,none,yes
+2026-01-14,Veda - Boring Vault Yield Streaming,Veda,CUST (fuzzing),4,80000,125000,125000,none,yes
+2026-01-15,Iota FV,Iota,FV,5,100000,100000,100000,none,yes
+2026-01-16,Fluid - Solana + Solidity,Fluid,AUD,3,67408,367000,400000,-123000 (25%),yes
+2026-01-16,Fluid - Solana + Solidity,Fluid,FV,20,299592,367000,400000,-123000 (25%),yes
+2026-01-19,APYX Audit,APYX,AUD,1.5,27000,27000,45000,-18000 (40%),yes
+2026-01-21,Calastone CTD V1.1 + CCN,Calastone,AUD,2,60000,60000,60000,none,yes
+2026-01-28,Voltr Audit,Voltr,AUD,3,42000,42000,90000,-48000 (53%),yes
+2026-02-03,Lightcone Trade Audit,Lightcone,AUD,8,104000,104000,160000,-56000 footer (+-80k line),yes
+2026-02-16,Den Wallet Audit,Den,AUD,4,108000,108000,120000,-12000 (10%),yes
+2026-02-26,Saturn M0 - FV + Audit,Saturn,AUD,1,25500,68000,80000,-12000 (15%),yes
+2026-02-26,Saturn M0 - FV + Audit,Saturn,FV,2.5,42500,68000,80000,-12000 (15%),yes
+2026-02-26,TradePort 2nd Audit,TradePort,AUD,3,60000,60000,90000,-30000 (33%),yes
+2026-02-27,Galaxy/Alluvial Audit (Liquid Collective),Alluvial,AUD,1.5,30000,30000,45000,-15000 (SOW rate),yes
+2026-02-27,"Lido - Staking Router DR+Audit, CSM v2/v3",Lido,AR (design review),3,33750,483750,645000,-161250 (25%),yes
+2026-02-27,"Lido - Staking Router DR+Audit, CSM v2/v3",Lido,AUD,20,450000,483750,645000,-161250 (25%),yes
+2026-02-27,Catalysis New Audit,Catalysis,AUD,1,19500,19500,30000,-10500 (35%),yes
+2026-03-02,Umia / Chainbound Audit,Umia,AUD,3.5,65000,65000,105000,-40000 (38%),yes
+2026-03-02,Reserve FV,Reserve,FV,3.5,59500,59500,59500,-10500 (line),yes
+2026-03-03,Polymarket DepositWallet Audit,Polymarket,AUD,1,30000,30000,30000,none,yes
+2026-03-07,Credit Coop Audit Retainer,Credit Coop,CUST (retainer),6,153000,153000,153000,-27000 (line),yes
+2026-03-10,Cozy Router contract diff,Cozy,AUD,0.3,9000,9000,9000,none,yes
+2026-03-11,MezFi FV,MezFi,FV,4,56000,56000,56000,-24000 (line),yes
+2026-03-11,Jito whitelisted instructions Audit,Jito,AUD,1.5,30000,30000,45000,-15000 (33%),yes
+2026-03-13,Kite AI Monitoring/IR SLA,Kite AI,CUST (SLA),3,48000,48000,48000,none,yes
+2026-03-17,Hadron Fi Audit,Hadron,AUD,5,65000,65000,100000,-35000 footer (+-50k line),yes
+2026-03-18,Catalysis reAudit,Catalysis,AUD,1,18000,18000,18000,"-12000 (line, 40%)",yes
+2026-03-19,Navi VoloVault Audit,Navi,AUD,2,34000,34000,60000,-26000 (43%),yes
+2026-03-24,Polymarket Enterprise Mar-2026,Polymarket,CUST (engineer wks),26,253500,253500,253500,-136500 (line),yes
+2026-03-26,Veda Enterprise Custom,Veda,CUST,16,204000,204000,204000,-36000 (line),yes
+2026-03-30,Royco - Audit & FV,Royco (Waymont),FV,3.5,46073,90000,100005,-10005 footer (+line),yes
+2026-03-30,Royco - Audit & FV,Royco (Waymont),AUD,2.5,43927,90000,100005,-10005 footer (+line),yes
+2026-03-31,Exponent Vault Program Audit,Exponent,AUD,3,50000,50000,90000,-40000 (44%),yes
+2026-03-31,Morpho Continuous FV (Q2 retainer),Morpho,FV (quarterly),per-Q,104000,104000,,-52000/qtr (33%),yes
+2026-04-01,Solana Foundation - Audit+FV+DD pkg,Solana,AUD+FV+DD (4-mo pkg),~4 mo,714000,714000,714000,n/a (SOL delegation),yes
+2026-04-02,AAVE Audit,Aave,AUD,0.6,18000,18000,18000,none,yes
+2026-04-08,Atlas Forge Audit,Atlas Forge,AUD,5.5,99000,99000,30000,-66000 (line),yes
+2026-04-08,Light Protocol Token program PR,Light Protocol,AUD,0.4,8000,8000,12000,-4000 (33%),yes
+2026-04-10,Superis Labs Audit,Superis (Cumberland),AUD,2.5,50000,50000,75000,-25000 (33%),yes
+2026-04-15,Cloak Audit,Cloak,AUD,2.5,35000,35000,75000,-40000 (53%),yes
+2026-04-21,APYX Governance review,APYX,CUST,1,20000,20000,20000,none,yes
+2026-04-30,Sky Frontier (Glenn Kennedy),Sky Frontier,AUD (retainer),10,250000,250000,300000,-50000 (17%),yes
+2026-04-30,Reyts (SDF/Stellar SOW),Reyts,AUD,~1.5,30000,30000,45000,-15000 (SOW),yes
+2026-05-04,Spectra (SDF/Stellar SOW),Spectra,AUD,~3,60000,60000,90000,-30000 (SOW),yes
+2026-05-05,Squads - Audit & FV,Squads,AUD,3,63529,120000,170000,-50000 (29%),yes
+2026-05-05,Squads - Audit & FV,Squads,FV,4,56471,120000,170000,-50000 (29%),yes
+2026-05-11,Saturn offchain,Saturn,CUST,3,80000,80000,90000,-10000 (11%),yes
+2026-05-19,Royco Dusk,Royco (Waymont),AUD,1.5,31500,89250,,-38250 (30%),yes
+2026-05-19,Royco Dusk,Royco (Waymont),FV,3,47250,89250,,-38250 (30%),yes
+2026-05-19,Royco Dusk,Royco (Waymont),AR,1,10500,89250,,-38250 (30%),yes
+2026-05-21,Alluvial - Liquid Collective retainer,Alluvial (Galaxy),CUST (retainer),16,204000,204000,240000,-36000 (SOW rate),yes
+2026-05-26,Superis Audit Extension,Superis (Cumberland),AUD,6,45000,45000,180000,-135000 (75%),yes
+2026-05-27,DFlow Audit,DFlow,AUD,1,30000,30000,30000,none,yes
+2026-05-28,Saturn Offchain audit extension,Saturn,CUST,1,23000,23000,30000,-7000 (23%),yes
+2026-05-28,Luca Money,Luca Money,CUST,1.5,29500,29500,90000,-15500 + SF 2nd line not in agmt,yes
+2026-05-15,Lightcone Audit Expansion,Lightcone,AUD,1,13000,13000,,-17000 (line),yes
+2026-05-07,Exponent Retainer Jun-Sep 2026,Exponent,CUST,2,,,30000,no agreement on file,no
+2026-06-04,DFlow Audit Extension,DFlow,AUD,1,,,30000,no agreement on file,no
+2026-06-04,Re Inc - Staking,Re Inc,AUD,0.8,,,24000,no agreement on file,no
+2026-06-05,Aftermath Audit,Aftermath,AUD,10,,,300000,no agreement on file,no
+2026-02-18,ProtoFire,ProtoFire,,,,,20000,no folder at all,no

@@ -1,0 +1,869 @@
+type Query {
+  me: User!
+  employees(ids: [ID]): [Employee]!
+  employeeFieldValues(ids: [ID], filters: EmployeeFieldValueFilters): [EmployeeFieldValue]!
+  employeeFieldTypes(ids: [ID!], filters: EmployeeFieldTypeFilters): [EmployeeFieldType!]!
+  timeAwayReasons(ids: [ID]): [TimeAwayReason]!
+  timeAwayBookings(ids: [ID], filters: TimeAwayBookingFilters): [TimeAwayBooking]!
+  employeeAnniversaries(filters: EmployeeAnniversaryFilters): [EmployeeAnniversary]!
+}
+
+type Mutation {
+  """
+  The request should contain a *Refresh-Token* header with the old refresh token.
+  """
+  refreshToken: AuthenticationResponse!
+
+  """
+  Requires a Super Admin or Admin (with the *Add employees* permission) permission levels.
+  """
+  createEmployees(arrayOfValues: [EmployeeCreate]!): [Employee]!
+
+  """Allowed for Super Admins."""
+  terminateEmployees(arrayOfValues: [EmployeeTerminate]!): [Employee]!
+  deleteTimeAwayBookingAttachments(timeAwayBookingIds: [ID]!): [ProtectedAsset]!
+
+  """
+  Create or update complete attendance records. Use this when you have full attendance data
+  (employee, day, clock-in and/or clock-out times).
+  
+  Behavior:
+  - If an 'id' is provided, the existing attendance record is updated with the given fields. Times are validated against the existing record's 'day'.
+  - If no 'id' is provided, a new attendance record is created. 'employeeId' and 'day' are required for creation.
+  - clockInAt and clockOutAt must fall on the same calendar day (in UTC) as 'day'.
+  - Overlapping attendance records for the same employee and day will cause an error.
+  - All dates should be provided in ISO 8601 format with timezone (e.g., "2025-06-10T09:00:00+03:00").
+  
+  For discrete clock events from time-tracking devices, use submitAttendanceEvents instead.
+  """
+  createOrUpdateAttendances(arrayOfValues: [AttendanceCreateOrUpdate]!): [Attendance]!
+
+  """
+  Submit individual clock-in/out events that are automatically paired and merged with existing attendance records.
+  Use this when you have discrete clock events (e.g., from a time clock device) rather than complete attendance records.
+  For complete attendance records with known day/id, use createOrUpdateAttendances instead.
+  
+  Behavior:
+  - A clock-out event is merged into the latest open attendance (has clockInAt, no clockOutAt) for the same employee and day.
+  - A clock-in event creates a new attendance record, or fills in a record missing clockInAt.
+  - Multiple events in the same request for the same employee+day are paired before merging with existing records.
+  """
+  submitAttendanceEvents(events: [AttendanceEvent]!): [Attendance]!
+
+  """
+  Send a message to the Shapes AI assistant and receive its response.
+  
+  Returns a list of two messages: the persisted `user` message followed by
+  the `assistant`'s response. Both share the same `conversationId`.
+  
+  Behavior:
+  - If `conversationId` is omitted, a new conversation is created and its
+    title is auto-generated from the first message.
+  - If `conversationId` is provided, the message is appended to that
+    conversation. Only conversations owned by the calling user are accepted.
+  - The agent call is bounded by an extended socket timeout (350s) — long
+    reasoning chains will not be cut off at the default 120s ceiling.
+  """
+  createChatMessage(
+    """
+    The user's message text. Persisted as the fallback text on the
+    resulting `user` message and forwarded to the agent.
+    """
+    message: String!
+
+    """
+    Client-supplied timestamp for the `user` message. ISO 8601 with timezone.
+    """
+    timestamp: Date!
+
+    """
+    Existing conversation to append to. Omit (or pass null) to start a
+    new conversation.
+    """
+    conversationId: ID
+  ): [ChatMessage]!
+}
+
+scalar Date
+
+scalar JSON
+
+input DateInterval {
+  start: Date
+  end: Date
+}
+
+type AuthenticationResponse {
+  accessToken: String!
+  refreshToken: String!
+}
+
+type User {
+  id: ID!
+  email: String!
+}
+
+type Employee {
+  id: ID!
+  firstName: String!
+  lastName: String!
+  email: String!
+
+  """Requires Super Admin or Admin permission level to view."""
+  workStatus: String
+  employeeFieldValues: [EmployeeFieldValue]!
+}
+
+input EmployeeCreate {
+  firstName: String!
+  lastName: String!
+  email: String!
+  startDate: Date
+
+  """
+  A mapping of extra fields to be added to the employee.
+  The key is the context and the value is the field value.
+  
+  Example:
+  
+  { "office": ["office_id"], "team": ["team_id"], "job": ["job_id"], ... }
+  """
+  extraFields: JSON
+
+  """
+  If set to true, provide the *permissionRoleId* to assign to the employee.
+  Requires Super Admin or Admin (with the *Invite* permission) permission levels.
+  """
+  shouldInvite: Boolean
+
+  """Must be provided if *shouldInvite* is true."""
+  permissionRoleId: ID
+}
+
+input EmployeeTerminate {
+  id: ID!
+  terminationDate: Date!
+
+  """
+  IDs of the reasons for termination. 
+  
+  These IDs are defined in the *termination_reason* employeeFieldType *valueOptions*
+  """
+  terminationReason: [ID!]
+}
+
+"""
+A single value of an employee field — the per-employee row that pairs
+an `EmployeeFieldType` (the schema/column) with the actual value for
+that employee. One employee usually has many `EmployeeFieldValue`
+rows, one per field defined in the account.
+"""
+type EmployeeFieldValue {
+  id: ID!
+  employeeId: ID!
+
+  """
+  The actual value. Shape depends on the parent field's
+  `employeeFieldType.fieldType`:
+  - Primitive kinds (`text`, `long_text`, `link`, `number`,
+    `date`, `phone`, `checkbox`, `rating`, `employee_email`,
+    `start_date`, `termination_date`, `workflow_progress`) —
+    the raw value (string / number / boolean / ISO date string).
+  - Select-style kinds (`single_select`, `multi_select` and their
+    derived subtypes `city`, `state`, `currency`,
+    `termination_reason`, `first_day_of_working_week`) — the
+    `EmployeeFieldValueOption.id`.
+  - Structured-JSON kinds — `country` stores
+    `{ countryCode, countryName }` directly.
+  - Entity-reference kinds (`team`, `job`, `office`, `people`,
+    `reports_to`, `file`, `profile_picture`) — the FK ID of the
+    referenced row.
+  Branch on `employeeFieldType.fieldType` (typed enum) before reading.
+  """
+  fieldValue: JSON!
+
+  """
+  Pre-flattened text rendering of `fieldValue` for search and display
+  (e.g. for an entity reference, the referenced row's display name).
+  Server-computed; null when no flattening exists for the kind.
+  """
+  textValue: String
+  employeeFieldTypeId: ID!
+  employeeFieldType: EmployeeFieldType!
+
+  """When the field value was last updated. Expected to be in UTC timezone."""
+  updatedAt: Date!
+
+  """No effective date means the field value is effective immediately."""
+  effectiveDate: Date
+}
+
+input EmployeeFieldValueFilters {
+  fieldTypeContext: [EmployeeFieldTypeContext!]
+  employeeFieldTypeId: [ID!]
+  employeeId: [ID!]
+  updatedAt: DateInterval
+}
+
+"""
+Schema metadata for a single employee field — the column-like definition,
+not a value. Each `EmployeeFieldType` describes one slot on the employee
+record (built-in like first name / start date, or custom like a tenure
+rating). Pair with `EmployeeFieldValue` to read the actual per-employee
+values.
+"""
+type EmployeeFieldType {
+  id: ID!
+
+  """
+  Storage and rendering kind for this field. Use this rather than
+  pattern-matching on `fieldName` — `fieldName` is account-
+  customisable while `fieldType` is the canonical server-side
+  discriminator.
+  """
+  fieldType: EmployeeFieldTypeKind!
+
+  """
+  Where this field surfaces in the product (e.g. profile, capacity,
+  onboarding). Independent of `fieldType`: two fields with the same
+  `fieldType` can live in different contexts.
+  """
+  context: EmployeeFieldTypeContext!
+
+  """
+  Per-kind configuration blob. Shape varies by `fieldType`:
+  `single_select` / `multi_select` and their derived subtypes hold
+  `{ valueOptions: [{ id, value }, ...] }`; `number` / `currency`
+  may hold validation hints; many primitive kinds leave this null.
+  Treat unknown keys as ignorable.
+  """
+  data: JSON
+
+  """
+  Human-readable label rendered in the profile UI and on the value
+  column (e.g. "First name", "Tenure rating"). Account-customisable —
+  use `fieldType` (typed) for branching logic; use `fieldName` for
+  rendering and search.
+  """
+  fieldName: String!
+}
+
+enum EmployeeFieldTypeContext {
+  address
+  city
+  contract_documents
+  contract_type
+  country
+  custom
+  date_of_birth
+  department
+  email
+  emergency_contact_full_name
+  emergency_contact_phone
+  emergency_contact_relationship
+  employee_capacity
+  employee_id
+  employee_phone
+  employee_profile_picture
+  first_name
+  gender
+  job
+  last_name
+  level
+  national_id
+  nationality
+  ni_number
+  office
+  passport_number
+  personal_email
+  reports_to
+  salaryType
+  salary_amount
+  salary_amount_currency
+  ssn
+  start_date
+  state_province
+  team
+  termination_date
+  termination_reason
+  unique_identifier
+  zip_code
+}
+
+"""
+Storage / rendering kind of an employee field type. Four families:
+direct primitives stored on `EmployeeFieldValue.value` (`text`,
+`long_text`, `link`, `number`, `date`, `phone`, `checkbox`,
+`rating`, `employee_email`, `start_date`, `termination_date`,
+`workflow_progress`); select-style values referencing the option set
+in `EmployeeFieldType.valueOptions` (`single_select`,
+`multi_select`, and their derived subtypes `city`, `state`,
+`currency`, `termination_reason`, `first_day_of_working_week`);
+structured-JSON kinds with a fixed shape (`country` stores
+`{ countryCode, countryName }`); and entity references to a separate
+table (`team`, `job`, `office`, `people`, `reports_to`,
+`file`, `profile_picture`). Closed set — clients should treat
+unrecognised values as fail-closed.
+"""
+enum EmployeeFieldTypeKind {
+  checkbox
+  city
+  country
+  currency
+  date
+  employee_email
+  file
+  first_day_of_working_week
+  job
+  link
+  long_text
+  multi_select
+  number
+  office
+  people
+  phone
+  profile_picture
+  rating
+  reports_to
+  single_select
+  start_date
+  state
+  team
+  termination_date
+  termination_reason
+  text
+  workflow_progress
+}
+
+input EmployeeFieldTypeFilters {
+  fieldType: [EmployeeFieldTypeKind!]
+  context: [EmployeeFieldTypeContext!]
+}
+
+"""
+A category of leave (vacation, sick, holiday, etc.) that employees can
+book against via `TimeAwayBooking`. Each reason carries one or more
+`TimeAwayReasonPolicy` variants that define balance / approval rules
+for different employee populations.
+"""
+type TimeAwayReason {
+  id: ID!
+
+  """
+  Lineage of this reason. Use this rather than pattern-matching on
+  `name` (`name` is account-customisable, `type` is canonical).
+  """
+  type: TimeAwayReasonType!
+
+  """
+  Display name (e.g. "Vacation", "Sick leave"). Account-customisable —
+  use this for human rendering; use `type` when you need to branch on
+  lineage. Not unique across reasons in the same account.
+  """
+  name: String!
+
+  """
+  The default policy applied when an employee not assigned to a specific
+  policy books against this reason. Null when the reason has no default
+  policy (employees must be explicitly assigned to book at all).
+  """
+  defaultTimeAwayReasonPolicyId: ID
+
+  """Display order in the booking-reason picker. Lower is rendered first."""
+  position: Int
+  status: Int!
+
+  """
+  True when individual bookings of this reason are visible only to the
+  booker, their manager, and HR — used for medical / sensitive leave.
+  False (the default) means bookings of this reason are visible to
+  teammates for coverage planning.
+  """
+  isPrivate: Boolean!
+}
+
+"""
+Lineage of a time-away reason — drives policy semantics, balance
+accounting, and UI grouping. `time_off` is the standard paid/unpaid
+leave bucket (vacation, personal, etc.); `working_away` covers business
+travel and remote-from-elsewhere days; `holiday` is the public /
+observed-holiday calendar; `non_working_day` marks days the employee is
+contractually not expected to work; `extended_leave` is for long-form
+absences (parental, sabbatical, sick leave) that need their own balance
++ policy; `special_leave` is account-defined leave types that don't fit
+the other lineages.
+"""
+enum TimeAwayReasonType {
+  extended_leave
+  holiday
+  non_working_day
+  special_leave
+  time_off
+  working_away
+}
+
+"""
+A single time-away request — vacation, sick leave, or any other absence.
+Created by an employee (or by an admin/manager on their behalf), then
+transitioned through an approval lifecycle via `bookingStatus`. The
+date range is exclusive of unrelated weekends/holidays per the
+underlying `TimeAwayReasonPolicy` — see `TimeAwayBooking.timeAwayReason`.
+"""
+type TimeAwayBooking {
+  id: ID!
+
+  """
+  The employee taking the time off (the absentee). Distinct from
+  `bookedByEmployeeId`, which is whoever filed the request — the two
+  are usually the same but can differ when an admin or manager books on
+  behalf of someone else.
+  """
+  employeeId: ID!
+
+  """FK to the underlying `TimeAwayReason` (vacation, sick, etc.)."""
+  timeAwayReasonId: ID!
+
+  """
+  Start of the absence as a JSON object: `{ date: "YYYY-MM-DD",
+  halfDayPart: "morning" | "afternoon" | null }`. The `halfDayPart`
+  key is null for full-day starts; populated only when the booking's
+  underlying reason policy enables half-day tracking. Always paired with
+  `toDate` — the full absence is `[fromDate, toDate]` inclusive.
+  """
+  fromDate: JSON!
+
+  """
+  End of the absence as a JSON object: `{ date: "YYYY-MM-DD",
+  halfDayPart: "morning" | "afternoon" | null }`. Same shape as
+  `fromDate`. `toDate.date` is always >= `fromDate.date`; for a
+  single-day booking the two share the same `date`.
+  """
+  toDate: JSON!
+
+  """Approval state of the booking."""
+  bookingStatus: TimeAwayBookingStatus!
+
+  """
+  The employee who filed the request (admin, manager, or the absentee
+  themselves). Used for audit + permissioning; pair with `employeeId`
+  when you need to disambiguate "self-booked vs booked-on-behalf".
+  """
+  bookedByEmployeeId: ID!
+
+  """
+  Free-text reason / note attached by the booking author. Stored as a
+  rich-text JSON document (Slate-style), nullable.
+  """
+  explanation: JSON
+  status: Int!
+
+  """
+  Whoever last transitioned `bookingStatus` (typically the approver who
+  flipped `pending` → `approved` / `denied`, or the booking owner
+  on cancel). Null until the first status transition after creation.
+  """
+  bookingStatusUpdatedByEmployeeId: ID
+
+  """
+  Timestamp of the last `bookingStatus` transition. Null until the
+  first transition after creation. Pair with
+  `bookingStatusUpdatedByEmployeeId` for an audit trail of who
+  approved / denied / canceled the booking and when.
+  """
+  bookingStatusUpdatedAt: Date
+
+  """
+  Files (signed sick notes, permits, travel docs) uploaded by the
+  booking author. Empty list when nothing was attached.
+  """
+  attachments: [ProtectedAsset]!
+}
+
+"""
+Approval state of a time-away booking. Lifecycle: `pending` →
+(`approved` | `denied` | `canceled`). `canceled` is the
+owner-initiated retraction; `denied` is the approver-initiated
+rejection. Note the canonical wire spelling is single-l `canceled` —
+clients passing `cancelled` will be rejected by this enum.
+"""
+enum TimeAwayBookingStatus {
+  approved
+  canceled
+  denied
+  pending
+}
+
+input TimeAwayBookingFilters {
+  timeAwayReasonId: [ID!]
+  employeeId: [ID!]
+  fromDate: DateInterval
+  toDate: DateInterval
+}
+
+type ProtectedAsset {
+  id: ID!
+  targetId: ID!
+  targetType: String!
+  status: Int!
+  name: String!
+  protectedAssetType: String!
+}
+
+type EmployeeAnniversary {
+  employeeId: ID!
+
+  """
+  The type of the anniversary.
+  This can be any of the following examples:
+  
+  - birthday
+  - work
+  """
+  type: String!
+
+  """The month of the anniversary. Zero-indexed."""
+  month: Int!
+
+  """The day of the anniversary."""
+  day: Int!
+
+  """The date from which the anniversary is valid."""
+  validFrom: Date!
+  employee: Employee!
+}
+
+input EmployeeAnniversaryFilters {
+  employeeIds: [ID!]
+}
+
+type Attendance {
+  id: ID!
+  accountId: ID!
+  employeeId: ID!
+
+  """The day of the attendance."""
+  day: Date!
+  clockInAt: Date
+  clockOutAt: Date
+  status: Int!
+}
+
+input AttendanceEvent {
+  employeeId: ID!
+
+  """
+  ClockInAt must be before ClockOutAt. At least one of clockInAt or clockOutAt must be provided.
+  """
+  clockInAt: Date
+
+  """
+  ClockOutAt must be after ClockInAt. At least one of clockInAt or clockOutAt must be provided.
+  """
+  clockOutAt: Date
+}
+
+input AttendanceCreateOrUpdate {
+  id: ID
+  employeeId: ID
+
+  """
+  The day of the attendance. clockInAt and clockOutAt must fall on the same calendar day (in UTC) as this value.
+  """
+  day: Date
+
+  """ClockInAt must be before ClockOutAt."""
+  clockInAt: Date
+
+  """ClockOutAt must be after ClockInAt."""
+  clockOutAt: Date
+}
+
+"""
+A single message exchanged with the Shapes AI assistant. Each `createChatMessage`
+call produces two messages: the persisted user message followed by the assistant's
+response.
+"""
+type ChatMessage {
+  """Unique identifier of the message."""
+  id: ID!
+
+  """
+  ID of the user the message belongs to. The same user owns both the `user`
+  message and the `assistant` response in a turn.
+  """
+  userId: ID!
+
+  """
+  Author of the message — `user` for caller-sent messages, `assistant`
+  for the AI response.
+  """
+  role: String!
+
+  """
+  When the message was sent. For `user` messages this is the client-supplied
+  timestamp; for `assistant` messages it is set when the response is persisted.
+  """
+  timestamp: Date!
+
+  """
+  Optional feedback flag set by the caller on an `assistant` message
+  (thumbs-up / thumbs-down equivalent). Always null for `user` messages.
+  """
+  isHelpful: Boolean
+
+  """
+  ID of the conversation this message belongs to. Multiple messages in the
+  same conversation share this ID.
+  """
+  conversationId: ID
+
+  """
+  Structured content of the message, ordered by sequence. Always non-empty
+  for messages persisted by `createChatMessage`. Each block has a typed
+  payload (e.g. text) — see `ChatMessageBlockType` for the variants.
+  """
+  blocks: [ChatMessageBlock!]!
+}
+
+"""
+A single structured block within a `ChatMessage`.  A message is composed of
+one or more blocks rendered in sequence; each block carries a typed
+`payload` that varies by `type`.
+"""
+type ChatMessageBlock {
+  """
+  Discriminator selecting the concrete payload variant.  Match this against
+  the `__typename` on `payload` when handling each variant.
+  """
+  type: ChatMessageBlockType!
+
+  """
+  Variant payload for this block.  Use a GraphQL inline fragment per variant
+  (e.g. `... on ChatMessageTextBlockPayload { text }`) to read its fields.
+  """
+  payload: ChatMessageBlockPayload!
+}
+
+"""
+Discriminator for `ChatMessageBlock` payload variants.  Generated from the
+block-services registry — adding a new block type extends this enum
+automatically.
+"""
+enum ChatMessageBlockType {
+  TEXT
+  ARTIFACT_REF
+  REASONING
+  TOOL_CALL
+}
+
+"""
+Variant payload of a `ChatMessageBlock`.  The concrete type aligns with the
+block's `type` discriminator (e.g. `TEXT` → `ChatMessageTextBlockPayload`).
+"""
+union ChatMessageBlockPayload = ChatMessageTextBlockPayload | ChatMessageArtifactRefBlockPayload | ChatMessageReasoningBlockPayload | ChatMessageToolCallBlockPayload
+
+type ChatMessageTextBlockPayload {
+  text: String!
+}
+
+type ChatMessageArtifactRefBlockPayload {
+  artifactId: ID!
+
+  """
+  Hydrated artifact referenced by this block.  Resolved via
+  `artifactsAPI.loadArtifact({ id: payload.artifactId })`.  Null when the
+  artifact has been soft-deleted or is unreachable to the viewer.
+  """
+  artifact: Artifact
+}
+
+type ChatMessageReasoningBlockPayload {
+  text: String!
+}
+
+type ChatMessageToolCallBlockPayload {
+  toolCallId: String!
+  toolName: String!
+  input: JSON
+  output: JSON
+  outcome: String!
+  errorText: String
+}
+
+"""
+A typed payload produced by the assistant — e.g. a downloadable table — that
+is rendered alongside its surrounding chat message. Artifacts persist
+independently of the message that emitted them so the same artifact can be
+referenced from multiple turns or surfaces.
+"""
+type Artifact {
+  """ Stable identifier — the same id resolves to the same artifact across requests. 
+  """
+  id: ID!
+
+  """ Soft-delete flag (1 = active, 2 = deleted). """
+  status: Int!
+
+  """ Discriminator selecting the artifact variant; matches the variant of `config`. 
+  """
+  type: ArtifactType!
+
+  """ Human-readable label rendered in the artifact chrome. Nullable when the artifact has no title. 
+  """
+  title: String
+
+  """ Per-variant render configuration. Selects `TableConfig` for `TABLE`, etc. 
+  """
+  config: ArtifactConfig!
+
+  """
+  Underlying data payload reachable via a time-limited URL. Null while the
+  asset is still being uploaded (transiently null inside the in-flight
+  materialisation transaction; never visible to other readers).
+  """
+  protectedAsset: ProtectedAsset
+
+  """ Creation timestamp. """
+  createdAt: Date!
+}
+
+"""
+Discriminator for `Artifact` variants. Generated from `artifactTypes` —
+adding a new variant extends this enum and requires a sibling entry in
+`ArtifactServices` so `Artifact.config` resolves to a concrete shape.
+"""
+enum ArtifactType {
+  TABLE
+  CHART
+}
+
+"""
+Variant render-config of an `Artifact`. The concrete type aligns with the
+artifact's `type` discriminator (e.g. `TABLE` → `TableConfig`). Use a
+GraphQL inline fragment per variant (e.g. `... on TableConfig { columns { key label } }`)
+to read its fields.
+"""
+union ArtifactConfig = TableConfig | ChartConfig
+
+"""
+Column descriptor for a `TableConfig`.  Carries the render-time ORDER and
+LABEL for one column — `key` selects a column from the underlying CSV
+header; `label` overrides the rendered header text.
+"""
+type TableColumn {
+  """ Header key from the source CSV.  Required — used to project + order CSV columns. 
+  """
+  key: String!
+
+  """ Human-readable header rendered above the column. """
+  label: String!
+
+  """
+  Hint for downstream consumers; the renderer does not coerce cells.  Format
+  conversion stays a server concern — if a column needs "Yes/No" instead of
+  "true/false", the CSV should already carry it that way.
+  """
+  type: String
+
+  """
+  Alignment hint for downstream consumers; the renderer left-aligns every
+  column today.  Kept for forward-compat with custom per-column alignment.
+  """
+  align: String
+}
+
+"""
+Optional summary stats persisted with the artifact so clients can render
+loading shimmers before the full CSV is fetched.  Backward-compatible:
+artifacts persisted before this field shipped still validate; renderers fall
+back to a single status-message line when `stats` is absent.
+"""
+type TableStats {
+  """ Total row count in the materialised CSV. """
+  rowCount: Int!
+}
+
+"""
+`ArtifactConfig` variant when `artifact.type === TABLE`.  Columns define
+the render order and header labels; the CSV is reachable via the artifact's
+`protectedAsset` (the public surface intentionally does not expose a
+presigned URL field — fetch through the standard asset-download endpoint).
+"""
+type TableConfig {
+  """ Column descriptors in render order. """
+  columns: [TableColumn!]!
+
+  """ Optional metadata describing the underlying data. """
+  stats: TableStats
+}
+
+"""
+Variant discriminator within a `ChartConfig`.  Selects the per-variant
+renderer on the client; ALSO drives the variant ↔ required-field check on
+the server.
+"""
+enum ChartVariant {
+  LINE
+  BAR
+  PIE
+}
+
+"""
+Per-series descriptor for `LINE` and `BAR` chart variants.  Empty for
+`PIE` (which uses `categoryKey` + `valueKey` instead).
+"""
+type ChartSeries {
+  """ CSV column key for this series — must match a header in the materialised CSV. 
+  """
+  key: String!
+
+  """ Human-readable label rendered in legend / tooltip. """
+  label: String!
+}
+
+"""
+Optional summary stats persisted with the artifact so clients can render
+loading shimmers before the full CSV is fetched.  Populated server-side by
+`ChartArtifactService.buildAsset`; the agent never emits stats.
+"""
+type ChartStats {
+  """ Total row count in the materialised CSV. """
+  rowCount: Int!
+}
+
+"""
+`ArtifactConfig` variant when `artifact.type === CHART`.  Loose at the
+field level (variant-specific fields are nullable in the schema), strict at
+the server boundary — `ChartArtifactService.normaliseConfig` enforces the
+variant ↔ required-field matrix.
+"""
+type ChartConfig {
+  """ Variant discriminator; drives the per-variant renderer. """
+  variant: ChartVariant!
+
+  """ CSV column key for the x-axis.  Required for `LINE` / `BAR`; null for `PIE`. 
+  """
+  xKey: String
+
+  """ CSV column key for slice category.  Required for `PIE`; null for `LINE` / `BAR`. 
+  """
+  categoryKey: String
+
+  """ CSV column key for slice value.  Required for `PIE`; null for `LINE` / `BAR`. 
+  """
+  valueKey: String
+
+  """ Series descriptors in render order.  Non-empty for `LINE` / `BAR`; empty for `PIE`. 
+  """
+  series: [ChartSeries!]!
+
+  """ `BAR` only — stacked vs grouped bars.  Null for other variants. """
+  stacked: Boolean
+
+  """ `LINE` only — smoothed curve vs straight segments.  Null for other variants. 
+  """
+  smooth: Boolean
+
+  """ Optional metadata describing the underlying data. """
+  stats: ChartStats
+}

@@ -1,7 +1,7 @@
 === /plan re-do-spec-output-report-pr13-on-top-of-aic ===
 
 Consider the extensive reviews by @johspaeth and others on PR#13. Our conclusion was that this PR belongs in AIComposer and not in AIAutoProver repo. 
-We further decided to build it _on top of_ PR#121 of AIComposer, which is `johannes/json-dump-prover-links`. So you should create a branch `shelly/autoprove-summary` on top of the `johannes/json-dump-prover-links` branch.
+Some PRs got merged just now for AIComposer that should make this actually much better streamlined and well-programmed.
 
 Focus on introducing proper datatypes and re-using existing AIComposer constants, methods, and conventions.
 We will add to AIComposer a dependency on ProverOutputUtility.
@@ -9,4 +9,8 @@ Consider how to decouple the LLM calling taken from Autosetup and use the one ex
 
 We won't need to do special capturing for --memory-ns and --cache-ns since we'll be part of the AIComposer console workflow for autoprover.
 
-Following all discussion on where to put outputs, we agreed it's not in the project root dir. 
+Following all discussion on where to put outputs, we agreed it's not in the project root dir. It will be under `certora/` in a separate subdir.
+
+For you it menas you'll have to re-generate from scratch large parts of this PR. You should do that while taking into account the feedback on the PR and also making sure you don't break the logic that we already saw was working quite well.
+Pay special attention to programming style comments you got. You could probably take many parts verbatim. But you have to be careful with design. 
+Work on top of AIComposer's current master. /effort max

@@ -161,4 +161,4 @@ Ondrej:
 
 separate code from tests/ci for ProverOutputUtility, which will have a public repo named ProverCLI, package name certora-prover-cli.
 
-separate code from tests/ci for Autosetup, which will have a public repo named SolidityProverAutosetup, package name certora-
+separate code from tests/ci for Autosetup, which will have a public repo named SolidityProverAutosetup, package name certora-solidity-autosetup
