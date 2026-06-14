@@ -1,0 +1,190 @@
+Delivered-To: mooly@certora.com
+Received: by 2002:a05:6f02:8384:b0:120:903a:542 with SMTP id b4csp138415rcf;
+        Tue, 9 Jun 2026 20:35:04 -0700 (PDT)
+X-Received: by 2002:a05:690c:4d04:b0:7dc:9693:57b0 with SMTP id 00721157ae682-7ed109c1008mr233446067b3.42.1781062503982;
+        Tue, 09 Jun 2026 20:35:03 -0700 (PDT)
+ARC-Seal: i=2; a=rsa-sha256; t=1781062503; cv=pass;
+        d=google.com; s=arc-20240605;
+        b=YTtt7pOusyKWOqq/HzenEFvhO0dgp+wDamjQ9Cz/u4BIhTiCin7y+OfDaExQKC+LaM
+         z6YUUGj0Rg43YdRQgHH9dgQ3SFyTJwRUxeC/BfQ4K4zn4F0P7xsrtRnXIBnbtd8b/+p/
+         AXudodP02SRAJv9KGdNIiqa0bgDSXOIHRMLDbZA0CH4sWRhPTEiDrDkZaIkzKodecOcv
+         go/+NIKEqnuS9l4ZBihdZocobgV641BYFAqfcKi2YVD4iS0dswC3e43UxD0IH2VmSsUJ
+         sPTlIcmHOVSi91/0za0OYhqf7mD8wh8xYWp+IIaYU+NwxMsXElTZUF3sxIbrHzfME/pa
+         hwVg==
+ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=mime-version:msip_labels:content-language:accept-language
+         :message-id:date:thread-index:thread-topic:subject:to:from
+         :dkim-signature;
+        bh=7lyTjPF+ictLTBozYVUou4vm4/WZ3Lt6AQz0rmbCpTc=;
+        fh=KhpAC/y8+4NlHGv8djt4J/kasRUKppwKAh0X0F7X4Hg=;
+        b=ImbvWlehGNjhlYX6x6C6dcfy7Jo2bsQKSIx86GT0ztgch66rVAYwMOm6EoZqU3eM9X
+         Z4UEtbGGftCe5yc+hKdWhS0emQ1QxL1UeUrxA5+0wimiuvnBrUnxkCDA4LTRX+VHEMBO
+         x5khxozreP1phyofEdBg5pEAEDYD67Ud/nKJkbr6iwZUCwQn9Kk+CPL3vmowe01P28tR
+         pOd5oSu6G0xivdBBgzKWgS9VAT2aBwWZPEEb4ezcna6k/2H76RCTLqj9w0ug+3Ap3Est
+         QqpWY/9ZkFVfddCagnHJBUhXnyTESm5NqNPhavST54GlTk1LhasMAx4JvAo7Mg0zbYr+
+         cQbQ==;
+        dara=google.com
+ARC-Authentication-Results: i=2; mx.google.com;
+       dkim=pass header.i=@msn.com header.s=selector1 header.b=HTHrl2Dy;
+       arc=pass (i=1);
+       spf=pass (google.com: domain of catherinearamsey@msn.com designates 2a01:111:f403:d123::1 as permitted sender) smtp.mailfrom=catherinearamsey@msn.com;
+       dmarc=pass (p=NONE sp=QUARANTINE dis=NONE) header.from=msn.com
+Return-Path: <catherinearamsey@msn.com>
+Received: from CY3PR05CU001.outbound.protection.outlook.com (mail-westcentralusazolkn190130001.outbound.protection.outlook.com. [2a01:111:f403:d123::1])
+        by mx.google.com with ESMTPS id 00721157ae682-7ea24e8f3c4si189090967b3.94.2026.06.09.20.35.03
+        for <mooly@certora.com>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jun 2026 20:35:03 -0700 (PDT)
+Received-SPF: pass (google.com: domain of catherinearamsey@msn.com designates 2a01:111:f403:d123::1 as permitted sender) client-ip=2a01:111:f403:d123::1;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@msn.com header.s=selector1 header.b=HTHrl2Dy;
+       arc=pass (i=1);
+       spf=pass (google.com: domain of catherinearamsey@msn.com designates 2a01:111:f403:d123::1 as permitted sender) smtp.mailfrom=catherinearamsey@msn.com;
+       dmarc=pass (p=NONE sp=QUARANTINE dis=NONE) header.from=msn.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=bNE/Qx3kRVpfKYnOPiXgRZ1V60Qn7I8MaJiwl1IZ2R9/ZZAqTGtWa/Pba3XpG/zcJ/WHW9si7pb2eY3U7FHmLoqVGPzre6ZzOr2KyNc436iChexKIPSIwZsifa4IcOCwYlvERAzC9Kb7msmKe6102vXtfwBRG8n+7lTrrR5ThYaHmJjpzC+fbGhbZ4L2RnsED9mb+j7aO29/w68VITcjAk8UZxMdz495HwyXVczhh5j5nxTOr5hmOwnNoQQDBf7udBgOiIu20eDNI2JScjMtnAHFX+8xTea3aFisfkVZnmgQEb3KG0vsf/wMRuYblP2FEePYyomFpZS3QVJJhLJUHQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=7lyTjPF+ictLTBozYVUou4vm4/WZ3Lt6AQz0rmbCpTc=;
+ b=bxVpyKt2NE7K7e7QviARCTCHYyXuVqG0gHHlfF+tZxAUTwxxRMBWWN1WEUbgmZg1wXLYQTGSadX8TBPm0ocyBsHlxYtGlrEovdbdfCGMp/9duJbE+XH9ue0Pr1AZBotjn0ibvHbHvo5BH6BmudltGiGtUPfHoyrlfGMJy6C5gvMDrfIV+BoKqOIk/X6PEToZxU013A+63urFzpT5XGMNWPQIoymYGoh+JvNYGx4l8qFkOr/lpLREc0NPlVSHU5b4z5FBixSBr+q6BJk9v0Wrt8ikOJg6LZs4ApL4uDw0WPLzKWhTY6c+w3UPtWfkINRRloiE4EiiW3WqF7gmhl0MBw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=msn.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7lyTjPF+ictLTBozYVUou4vm4/WZ3Lt6AQz0rmbCpTc=;
+ b=HTHrl2DylYrp+QOHLOJ15IKq0uICUzXnV52v7VLyRYjBnZsyV5cKE/nXMsBgSuDnJSnSSOrUeXCsYAHNtXHgCoGaUnY1A1KLpqy884FdKEYlhaWTq0gTe7x2pDF1zP1uRG3bN5EuswjSxm1ecW6683OVoiv2dFxidBolNnVGdT66ngdECArMrFh6i4CQV55yCARCCga+hKczLA7SyB+gEVSa75x51utQjtgK2NK1TBpCEyo18dtWW5u5BL4Oxr1cTYAyJkLnyKwh2UMdKTy9muEsofWvGD2Rn8w2bCgoHPAWqjYJC3TKUXGmeJQmUYYchD9PZyfqaV2273udRG9d1g==
+Received: from SN7P223MB0624.NAMP223.PROD.OUTLOOK.COM (2603:10b6:806:267::8)
+ by BL3P223MB0276.NAMP223.PROD.OUTLOOK.COM (2603:10b6:208:34f::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.92.13; Wed, 10 Jun
+ 2026 03:35:01 +0000
+Received: from SN7P223MB0624.NAMP223.PROD.OUTLOOK.COM
+ ([fe80::2b3e:6ca7:a476:9ae9]) by SN7P223MB0624.NAMP223.PROD.OUTLOOK.COM
+ ([fe80::2b3e:6ca7:a476:9ae9%4]) with mapi id 15.21.0113.011; Wed, 10 Jun 2026
+ 03:35:01 +0000
+From: Catherine Ramsey <catherinearamsey@msn.com>
+To: Mooly Sagiv <mooly@certora.com>
+Subject: just a note
+Thread-Topic: just a note
+Thread-Index: AQHc+ImwX+2UXr3pEEOI1AuYl1mWfA==
+Date: Wed, 10 Jun 2026 03:35:00 +0000
+Message-ID:
+ <SN7P223MB06241BD492253854DAC9833EDE1A2@SN7P223MB0624.NAMP223.PROD.OUTLOOK.COM>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN7P223MB0624:EE_|BL3P223MB0276:EE_
+x-ms-office365-filtering-correlation-id: 25b56cad-1998-469e-3015-08dec6a140a2
+x-ms-exchange-slblob-mailprops:
+ ajlDcABzOp5shjMZ3pW/MDLca+YGvPE4Xd2aZi8FV8m1augiYdS+4u5DIlGJFv+jdXjsxnWPAWpnjXob1H5uaLxrXS6l7mLiIAteTyb+gQ0WVht4DjdWWcgHMUwm43Z9HudspD7DFwC19jEbwtj2+8Khoc5ZlSgodKhs2e1Sz1pclEMzibW4rLCQSvF+VMb0doAktFQSP9JLBMHT9ypFqdL5fCuX6kaawl3r1jIK+hbP2mPximWZdbha3MUrfm3TqP4sL8VSol9DJrYAgjs2IODOoBzuCPm9Wac8JaFQ5BeXanmCCFbfxHdYKWJTBzm3qqO7b8Fu9jkn138+lI+jOaxeZHwAMgQ7ed8vPb/5CaI6akwQaTDvVyUiEwORC4Ak8Tz4mm0ozLOAHR/YMy0pkSZq1GqK8G8IS6IEiNbWgJgq3BlW6PSCo5bpU1iMXt+jVgI2/H7B2SwwaCtN1bpL8iMuDWmaio2HT9IMRRObKlTemvEq/JilapDtjAu+GoITaMYrZATuchIA9YTJ9Tj6pTfD13gm5rI7of1y/9QciWYWmSChtF9HzNJC7H3tskXB5zkcC+cpUiY=
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|31061999003|8060799015|8062599012|15030799006|15080799012|19110799012|24021099003|51005399006|55001999006|440099028|3412199025|102099032|40105399003;
+x-microsoft-antispam-message-info:
+ =?iso-8859-1?Q?3MLi+c6OmwDqAAEZEuICrIttBXpRzv6mOf9hHJeFHh28QX6ZVR0AwHZ+4u?=
+ =?iso-8859-1?Q?14o5Y1L7WcOr6lFIuiEb877Xt3WLrrWX6tiv5i0/zI7IbAL4dfQQATsjBq?=
+ =?iso-8859-1?Q?vKeFiGHB91P4wEnKH3Mmo6/IsjUYk0r7ilosyuw9UY9qhQ3IJu4RCGvgSh?=
+ =?iso-8859-1?Q?0ITv679FZxBpDDoUs2u4+/HT/a/0rNIcRrOWO8DBUPuyRBoJ292nkVM6z8?=
+ =?iso-8859-1?Q?31AFA86gpLg1B1dZkX4clCmS+dL0bspZb6qGDR1cVTXsZ/kTDa0xA92vmP?=
+ =?iso-8859-1?Q?JKsbqKi0/DYKeq+1iB/KUCRoRlYYOLUJULQZSQ+C7bumXnRsQsxm740lL5?=
+ =?iso-8859-1?Q?8bpz4WxUhu/6G2UQGWkdlDjrkWYLniIAW1Hv17Ef/3Cxu9UUKcWLxCE3jG?=
+ =?iso-8859-1?Q?9+uO3K2cHniGuWr2mHpRnvaOm6zdJAiruyj8VWCSYwGLZvc0yU8I62PClZ?=
+ =?iso-8859-1?Q?et22+TQ36xP+nA6l2Py6fnCaoB5V+qCGVfVRQOrEr26ihFj0a0x/q6CagZ?=
+ =?iso-8859-1?Q?tULIUaZiJDlFMuxMc5hqzUjyUCBJZ610Yv6Idb6M/tmedLxhOQRyUAROHu?=
+ =?iso-8859-1?Q?ycjPqamkkreaAx4/Kc7oMxJYtPry4uWq23n7hPtrn3qp4ELwoLezg/wnIw?=
+ =?iso-8859-1?Q?LinM5xvV3PE7wWuVaALKKD4MGIl0Ov382yxJLda/4ZZ7U/PgZEfL9kaAK7?=
+ =?iso-8859-1?Q?ESXfFk0rzb350KCN/O0zFgV8xw1OSNiMaqkb4ASWUe2D+mVpkfQ0msNyfL?=
+ =?iso-8859-1?Q?xu5Mgnl3G4qKa3XqFZJlo9wTt7Yml4N0E/mqc+dxeGyF8iTRphIXmQPT4y?=
+ =?iso-8859-1?Q?gq2FXK+wBcsbyxzs28ZFPUT/lGbxkN9K8y76R50oZYppViyxKWKD+6DaG6?=
+ =?iso-8859-1?Q?1TiayOvLN/cMKW683qWqb74gFnEZiX/FoeYjOqaZ25GClAhpx2Wd7I4H6/?=
+ =?iso-8859-1?Q?kkXUGMiHaNw3UD2ZVs58BZ/9nQcfyrkftyewItUVYvmbVAyMg4oILvLR3a?=
+ =?iso-8859-1?Q?HZDmI7P5WAgOCVXCY0smvmoFUeWSkzxWBZ1Yij?=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-1?Q?7F7jxwWLqSk5ITrzqSud+31IFiJqJfx8HxJS+Kdaa1jZsG0njxHvnwtswF?=
+ =?iso-8859-1?Q?NhenK8Tr3EETHKcOpcmHhNlRARkU7Aajjx82dYLl7mw26fzeKNjAw64BFP?=
+ =?iso-8859-1?Q?64WB+n1kdIIWs0hPKDtGE4Cf0dIwpN1s3Fk3adb5jlsae+RQ9Kt0kucq1a?=
+ =?iso-8859-1?Q?SICg1YsVONRTzNIrP3TYGgl8qV/kWZ+0KMNgMS9QZqN3SAXXc9a1Q2Riji?=
+ =?iso-8859-1?Q?1QtqZ5mc6QnDCFALT1tcnfL0JgI8ypCB7ByuN1dY66oqkhbqx+oyQ2b8hB?=
+ =?iso-8859-1?Q?eMN6j0icj1+fMXIQl1JGuGsHXVR3qjmQDjWuFm9GHxM3dciGk2jk2bkNoB?=
+ =?iso-8859-1?Q?J5doXcE9Dsn6OzEas0nYcMEdx91Wrr/egn9N0RRvhNZ72aSCaniUCDs7f3?=
+ =?iso-8859-1?Q?B88qG7PiAy3KG1iZ+AMdyZbJCo9WEenfWmO55Q1YDBbJ20cq9GPpnBtnIL?=
+ =?iso-8859-1?Q?wuYtYz7GmfAEvD8CCDnNvRUaJKqli6rnIR8+4o/9ImZviGxiz38bBja80j?=
+ =?iso-8859-1?Q?tG7l0ozpVxqnBwwX3Gadbf/97n/r9ycX2r4co42WFHXwgPdZqZ2x85YuMa?=
+ =?iso-8859-1?Q?rb7getndPVvApsvBv4KsFkstSF7WfahFVYMbvX3KnZxSpTMNvuaIxSe/du?=
+ =?iso-8859-1?Q?TkircvVUdwGV2WRb1+AhpQSAUEOpRH5JAY1hIh7RkBDDjHr6nTihKX6KpX?=
+ =?iso-8859-1?Q?/6YCawP3W5Kgt+QbOivxX2tY0uoCeN6g+1wsmxMyJLQpjdzQ1pbJW6AlWX?=
+ =?iso-8859-1?Q?A/Yc7Mnd3IynPag3cQyyuDu+u9TqEWAwWdhBgMMIZlzycv3p8zkUUUygmX?=
+ =?iso-8859-1?Q?v6hKE/1fRPSFNVXjODgMGuFSy82u2pSktrZZokUY/cjEZIYtzHK0bPzEnP?=
+ =?iso-8859-1?Q?U7XW4IUT0I2Ud/C8HWWyqh2+rnxfdp1E8hmlnLhwtgd3D58RLhrsYITizz?=
+ =?iso-8859-1?Q?+PEyPOcMuNdb2KOiYJNTBwWNrtKnoQe/XcisdduMBydtSvBJWKjbarrvSM?=
+ =?iso-8859-1?Q?JmBnxsAZn+RRYNk+Ye0WVrr/INYS/Odu3NHZHEMrPsT7i2DqWox+I1pGvQ?=
+ =?iso-8859-1?Q?vUaY20o7LzikJKwtg0gT0qWliS8TNwHy6lPCJJPBFWGLD6XbuPfFtMW4Dt?=
+ =?iso-8859-1?Q?cw3NJMySmaMS6pCAx++7zjue8oBKjQB9SAzi13L1MD7arvo0VBDgdg+kGl?=
+ =?iso-8859-1?Q?D+f25CQb/UHvwMs9c1lCTwFRbSpFBVqt95HuS2FDgCA2MgL7vZ68ns0d7K?=
+ =?iso-8859-1?Q?wbywt8OECwKJ+M+S2p17NiAT1OA/cP6z6vzlpbCd5rlswywP9aj1HXYBrV?=
+ =?iso-8859-1?Q?+MYfXE4X2V+3LyiEnz0BTDe2bca8sM2MZM85CP+FWLPmmtjUwP0WTAyfjP?=
+ =?iso-8859-1?Q?xRUoQl7SLK0ltFib1h7yCC6QiAMmDROMoOAzuWkUROAI2+8nDoTusUXVzZ?=
+ =?iso-8859-1?Q?R+mglg8zHfikHZ4d0dkL5j/RndhqjgBN++kbjUA9UIShOZ0JNv3qszQDYt?=
+ =?iso-8859-1?Q?Bp7BvT+jq5FLthw5jqcO7o?=
+Content-Type: multipart/alternative;
+	boundary="_000_SN7P223MB06241BD492253854DAC9833EDE1A2SN7P223MB0624NAMP_"
+MIME-Version: 1.0
+X-OriginatorOrg: sct-15-20-9412-4-msonline-outlook-583ad.templateTenant
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN7P223MB0624.NAMP223.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 25b56cad-1998-469e-3015-08dec6a140a2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jun 2026 03:35:00.9375
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL3P223MB0276
+
+--_000_SN7P223MB06241BD492253854DAC9833EDE1A2SN7P223MB0624NAMP_
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+
+I forgot to go through the rest of the paper albums when Tom was away this =
+afternoon. I'll try to find a few more.
+I definitely don't have any photos of him with work associates  at UW or Be=
+ll Labs.
+CAR
+
+
+--_000_SN7P223MB06241BD492253854DAC9833EDE1A2SN7P223MB0624NAMP_
+Content-Type: text/html; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+
+<html>
+<head>
+<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Diso-8859-=
+1">
+<style type=3D"text/css" style=3D"display:none;"> P {margin-top:0;margin-bo=
+ttom:0;} </style>
+</head>
+<body dir=3D"ltr">
+<div class=3D"elementToProof" style=3D"font-family: &quot;Times New Roman&q=
+uot;, Times, serif; font-size: 14pt; color: rgb(0, 0, 0);">
+I forgot to go through the rest of the paper albums when Tom was away this =
+afternoon. I'll try to find a few more.</div>
+<div class=3D"elementToProof" style=3D"font-family: &quot;Times New Roman&q=
+uot;, Times, serif; font-size: 14pt; color: rgb(0, 0, 0);">
+I definitely don't have any photos of him with work associates&nbsp; at UW =
+or Bell Labs.&nbsp;</div>
+<div class=3D"elementToProof" style=3D"font-family: &quot;Times New Roman&q=
+uot;, Times, serif; font-size: 14pt; color: rgb(0, 0, 0);">
+CAR</div>
+<div class=3D"elementToProof" style=3D"font-family: &quot;Times New Roman&q=
+uot;, Times, serif; font-size: 14pt; color: rgb(0, 0, 0);">
+<br>
+</div>
+</body>
+</html>
+
+--_000_SN7P223MB06241BD492253854DAC9833EDE1A2SN7P223MB0624NAMP_--

@@ -1,0 +1,269 @@
+Delivered-To: mooly@certora.com
+Received: by 2002:a05:6f02:601:b0:120:903a:542 with SMTP id 1csp1972654rce;
+        Mon, 1 Jun 2026 06:20:11 -0700 (PDT)
+X-Forwarded-Encrypted: i=3; AFNElJ+ccIqJlM2XKsKt1fXhbXj0bQJ4h1HKVBSN1zBE7ziFGDaQQe7BujSCaDwQADoSbveJYqxMxg==@certora.com
+X-Received: by 2002:a05:690c:d1b:b0:7a0:4146:6eda with SMTP id 00721157ae682-7e05a28d6bcmr97401507b3.20.1780320010977;
+        Mon, 01 Jun 2026 06:20:10 -0700 (PDT)
+ARC-Seal: i=2; a=rsa-sha256; t=1780320010; cv=pass;
+        d=google.com; s=arc-20240605;
+        b=UNB4bCxwhmdyiH7ffbrd9W7mUib5S8ryKTr9U/Es/Tm0zlTlW806PzXWT6L/AKE0o/
+         ytdNog12kPfrF3DthLq6ikVaiyYFfoyE4LRHcRJXc1Z9JER+76EXxc4Kzfa7RtQTSUEm
+         riyR24iQ3y8T6VYbG8PXG7zrK0nK568eQKJUBUUpyErP4t/PoAIrqa9zv6It+ExWx2O+
+         Bzg0qhLGblPYVzEis+QZha8S1d8vX2Iw7Hpco3P7xSgYRCrePBhjPzkexSY9JNh7zjiP
+         EP2pkEp0uBOp45EFYL1pPvLrk/WbSpIzp2+jeYyhMW2ax2UcthMsEd2W5Z32l48oUzZc
+         yueg==
+ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=mime-version:msip_labels:content-language:accept-language
+         :in-reply-to:references:message-id:date:thread-index:thread-topic
+         :subject:to:from:dkim-signature;
+        bh=jr+C5ilLmzD7UL+wCU8Zq1Ezhpp212mcTga9NlgEw1E=;
+        fh=iYoCqgNVGdo/Dc29Iu9qThvN1aDVfseNW4FW5ALl8x0=;
+        b=aQJg3Xg6kNH77i3h+7uafaOzhe4ks+3dwjNS9rI6fhH/U5FTaZqydrStV2eyRn3GOW
+         YFD44wM9CXifPmNgoQfLF1ww2Yc/SvyF2xcd2KzH9VQDG4oAH+wXA/9AS86+UOY6Y9ku
+         +0GVVA+mG9dLig3RqGDOB8urOf+k/JeGu1T98wc1w2AT28nHa/3UnsNx4tK/4/hDydfg
+         EVtgrAWJK9z9TbZMCqj4syNYSpc+7Hh/i59aF5TN4pV8DIBtsLbShEVkpJMis6ckO6zn
+         aYOy+gKtALwfJ7Gzpf2T1CPDftysmy/UXkAJVl68yM8iQwd+Xd8jJTuk8s2aVKuBCSvt
+         pJqg==;
+        dara=google.com
+ARC-Authentication-Results: i=2; mx.google.com;
+       dkim=pass header.i=@microsoft.com header.s=selector2 header.b=OzuUQPxn;
+       arc=pass (i=1 spf=pass spfdomain=microsoft.com dkim=pass dkdomain=microsoft.com dmarc=pass fromdomain=microsoft.com);
+       spf=pass (google.com: domain of sburckha@microsoft.com designates 2a01:111:f403:c101::7 as permitted sender) smtp.mailfrom=sburckha@microsoft.com;
+       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=microsoft.com
+Return-Path: <sburckha@microsoft.com>
+Received: from BL0PR03CU003.outbound.protection.outlook.com (mail-eastusazlp170120007.outbound.protection.outlook.com. [2a01:111:f403:c101::7])
+        by mx.google.com with ESMTPS id 00721157ae682-7e17d6595f2si61632037b3.170.2026.06.01.06.20.10
+        for <mooly@certora.com>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Jun 2026 06:20:10 -0700 (PDT)
+Received-SPF: pass (google.com: domain of sburckha@microsoft.com designates 2a01:111:f403:c101::7 as permitted sender) client-ip=2a01:111:f403:c101::7;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@microsoft.com header.s=selector2 header.b=OzuUQPxn;
+       arc=pass (i=1 spf=pass spfdomain=microsoft.com dkim=pass dkdomain=microsoft.com dmarc=pass fromdomain=microsoft.com);
+       spf=pass (google.com: domain of sburckha@microsoft.com designates 2a01:111:f403:c101::7 as permitted sender) smtp.mailfrom=sburckha@microsoft.com;
+       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=microsoft.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=h4FqkXY59Tv/WbvcUDWaL8IMnpz6nTCKQn4G6g0m8HlPYkNCaADZibnGBI5P+gVI1Mt+uGHIDCKQGC6D78PvMypFVb9r2ZEiM2pEyInXe7KdMwXdqU5QY6QNlUOUW04KdO2+BQ5AXka5q+6bvSDpIn5GVnNf/h/z8NpjLhX+xeDRH/8sWADwTGy2RifJUzNq4nkHdtoSjTmvZlB0Kqh89ABcx7ISFYY+6cobI/1y6AvozhYnsgZtKkfk/DDgwejZ4rKFTc5SqJMtsyldqwWcqry+5Qv8iBDNT62qxs5yeFd1Sdm/X5eJcePIDujT8CFPMT4KWfFOk2K3/0Mbk46wvw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=jr+C5ilLmzD7UL+wCU8Zq1Ezhpp212mcTga9NlgEw1E=;
+ b=tsNFwcsrsQfJ3eCy+kmuUeNRsfn9aw9kkrXFEHsAJRHmqziC5zXZRKHKJXvWv26tjfqLOS0BsqlETd0hz56D9S5u3kJNaQZ2x+dkTn48iwzaS9CaHMeUQX1dh1hCs+U3pH8pZuOB8xbZBisiLJYew7Xg4W76wWI9IDQHW8kVoZvM+o5WY7l9Ybs7wLkonpu+y3rJKMUr2aq8yBbXeBY+L27Q/PLFEnMw1BjfV9iucWlOBJsgiebd0uT27CoRbeRvdcXdgXuKHIpSMMG3Y8le0hnBft3mVdWV3K75Vogrs21uP4RJP4F7NQgoPxYZJh0hN5310b57kMIAQl2M/x2ynA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jr+C5ilLmzD7UL+wCU8Zq1Ezhpp212mcTga9NlgEw1E=;
+ b=OzuUQPxn6N9mhEwH90Vf91BLNjXBsdoAZsgYgw8zvoEbZy4QNp1l3vVti9yfpJRSNJtcij7mPpoHo2B219D4DTscYqoDLdqOFEJY27W2ZEucTc6elBRB3EdpLda08glNjkKpwNzilI3gvyP9KAxmtM3owkLDvaHEoyGYHwPaHxI=
+Received: from DS4PR21MB6583.namprd21.prod.outlook.com (2603:10b6:8:2eb::15)
+ by DS7PR21MB3404.namprd21.prod.outlook.com (2603:10b6:8:93::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.92.5; Mon, 1 Jun 2026
+ 13:20:08 +0000
+Received: from DS4PR21MB6583.namprd21.prod.outlook.com
+ ([fe80::3f2e:b38d:c4e1:cdeb]) by DS4PR21MB6583.namprd21.prod.outlook.com
+ ([fe80::3f2e:b38d:c4e1:cdeb%3]) with mapi id 15.21.0092.004; Mon, 1 Jun 2026
+ 13:20:08 +0000
+From: Sebastian Burckhardt <sburckha@microsoft.com>
+To: Nikolaj Bjorner <nbjorner@microsoft.com>, Mooly Sagiv <mooly@certora.com>
+Subject: Re: Email
+Thread-Topic: Email
+Thread-Index: AQHc8XP1fsT6v6B0X0GlddDX5iNbw7YprsY0
+Date: Mon, 1 Jun 2026 13:20:08 +0000
+Message-ID:
+ <DS4PR21MB6583EF1238910028FF5BABDDD6152@DS4PR21MB6583.namprd21.prod.outlook.com>
+References:
+ <DS0PR21MB619422C5932E687A7BAC5FEBC3152@DS0PR21MB6194.namprd21.prod.outlook.com>
+In-Reply-To:
+ <DS0PR21MB619422C5932E687A7BAC5FEBC3152@DS0PR21MB6194.namprd21.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2026-06-01T03:08:45.6028637Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard
+x-ms-reactions: allow
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DS4PR21MB6583:EE_|DS7PR21MB3404:EE_
+x-ms-office365-filtering-correlation-id: 386364be-da58-4064-300e-08debfe0807b
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|10070799003|366016|376014|1800799024|38070700021|7053199004|8096899003|18002099003|22082099003|11063799006|56012099006;
+x-microsoft-antispam-message-info:
+ nTijsBD6q4UzuZS5clDehhfj0nnRLT7XDD1atp9GbDzlIFj8EDt7WJvkTzlGosL6mxSyHxvc/OsiawIdUgfk7YUbHCi+szUV3D5xyQgYjUUmqtm8ijKjYMFbJXAFZ4DwSdIusvBscY3XZ8eDpMozDn2hQvWBSrw8fIrX7NnnoeKhGY3mJilcv1Djx0BHbFImdxHsO1MEbbFOatzyCL9wZ7iVN8MOyrIUWt4thMqMbQlp3o5Tkt2ktH71jsJbNqqucCiZHEmROVfyr71MCEru7n1toWw9RLDaH47Gm3rCbzSz4cMTmQJqJP2mZOx8DDBYLzLf3fSOclc4tjmRFFFCMAWl1TR5fs0cqiWDIb5+1tImQzPCmZAP8oD3ha8MzPwzuvDMbQGJP/es//m1eMD6DT1n3raTWb+uGBttxe0dUQ4CKb/4IclcFUjoxDnSD4onzjPxxDPNsWjEnc2c/74KJXy0CZnVs3m4XmAiXqiArG/uVc0gZ3pmn2jNUMtNJVnpU5858i5j9vXku1ABsiCbHDDci9FuLWvJBl0yedwgVLBaS+xBMEUBwZ3pIEcwOOksvrvIk32R3WadiwcojPPgmywhg2l1ZdgmIovJ7M+d0sY5uniFsTA//GGHGVPJaRIePAvspplIv/LrK6IAh05aKaEUJmXF/tSkju/DKNCaqabPANUIr4CIJr+kdFjfDtQxFKKIZ5KFeBA9yFP2dZi3Wg==
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PR21MB6583.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(366016)(376014)(1800799024)(38070700021)(7053199004)(8096899003)(18002099003)(22082099003)(11063799006)(56012099006);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 2
+x-ms-exchange-antispam-messagedata-0:
+ =?Windows-1252?Q?vmB2GDykkABtiKoGQXnrGwGTkog9aSqIK9+l8necduVzhTOAJBNxqC8O?=
+ =?Windows-1252?Q?eCQagiYrqfX1u8qAI3aHKuixV0iCR9q3A3It9psumbj481MtWQCva7y+?=
+ =?Windows-1252?Q?QTELVob/9zk83KvSZ52+btDDEf9RD/cQIsNQJ59/VvafGcp1E6w/drIh?=
+ =?Windows-1252?Q?EV1Jkc1TwBlHqrrVbO4sBEeFdCPPAIkCMFmcbj+xglfTpQ01ouMg/di/?=
+ =?Windows-1252?Q?XkkrF2sCjuJboIhwFCd863u0n77GgDyNAce0r0c0+7DRZnVnMZh+xQ4N?=
+ =?Windows-1252?Q?BrZdZxeuzljUd1Vjv9djI4hmZfjBKV7WRLj/q0Jcgz8DhdxJ5YrrMBiX?=
+ =?Windows-1252?Q?Ty47pMelO3a7bYp7wRpPyvLlBUa39H2AJH81Q0cojNWY8xuTUtmaauGr?=
+ =?Windows-1252?Q?l66jqBi4rck2tv8IaqkNqDVZxezSL1fqjMMYFPftK1nagMsNiHKmz7WF?=
+ =?Windows-1252?Q?eY1JkwjuUp5ehXiFnyqXfEOvmUrfQLvWGni24zSJs7dRQeOLV2z1eSxq?=
+ =?Windows-1252?Q?vKMhzamd9WqUmXwMgAofRbgF/irL+kwnGL0+DVQf6SVmbwRIgRf6S6UE?=
+ =?Windows-1252?Q?ZWT7A3NE+9r3L+N4i5O9Bgwl1GqmGYpoDdKskPYqDywgaDCm215tPswm?=
+ =?Windows-1252?Q?6TWV9mAAQvRrK6gqpvJ5KB3sRsxGRpZ2SsOwek/z0DBvvGzSZ4z3cTL/?=
+ =?Windows-1252?Q?vq0Ro1DOZ1ah1954ik5m0ljgR+VfkYzfZPA8ZL6k0dHy264nFeGY3FSO?=
+ =?Windows-1252?Q?PPzox4PCMwIiXZdQMtrxM1/9Dyjw/NgjGaAXrJKgLmBUZu+UP8Vfic9D?=
+ =?Windows-1252?Q?nmmW5bdXtYbTmIYXd05G16wjkdFbf+/Dul9BbHOeOd7n2jhVWJIIKLoa?=
+ =?Windows-1252?Q?fOHOgi4W7jrNX4ZAEyCLGz7DJrSNtvcwA5CEoIT7bh8pL23cmIG0Gf4F?=
+ =?Windows-1252?Q?43KGHSduokENE4wiuT6ftDn45uZvEeuh7ZKnbjN/P6Fe8LXIDkOBE0W4?=
+ =?Windows-1252?Q?detjP/1J8uZaOjH1PEIYfEFfQh0X4xvG0mY8IVhm7QR4BaHWQPKarWdO?=
+ =?Windows-1252?Q?20164vilekf5fyq+6zHoAalK1jzJYh75OVxB35U8O+hRyhkSHO4kFtfd?=
+ =?Windows-1252?Q?5zemhgVyMz4dAgPPZWjJ6QpUUQPfg9QCubjSvZg0Wvnoz2OO/htPvODJ?=
+ =?Windows-1252?Q?NZPgN4HLaiKJDYe5PMTUUn3XNVvLYyQBsf9j5RzoFDAmoYbvGNxTyGtF?=
+ =?Windows-1252?Q?yeHTrurCY1dfzDkOdgmKnm3OWclP+VQjeCUyRMqxTvuZmI7RpcBoZz8y?=
+ =?Windows-1252?Q?JavbjDFBH5+lJshMnpwUICpYdnhftcdzo8PlbGTJeZPFcjrGT6c4aLPU?=
+ =?Windows-1252?Q?5RxtryAw9lvm8EBeZcyHB4lemaGvGT4udkPmOzb4Do1+UeZDI+uFEU9F?=
+ =?Windows-1252?Q?D8wfBeykDhOhGr8Y9KQthXxFHgPaxqpQDqyj8nVhDxMUsuY4nvm56H3+?=
+ =?Windows-1252?Q?uVuVKU8nXOg2Bl27/+m2IKfPzY+5aIFJrJRVQkVd6cWF2dpCCBZgEUN5?=
+ =?Windows-1252?Q?cb/KTg90kDPKnTTBHatB9Y8PBjTm1ux8kPf9z9fZ7/iZvY79qKZ43P//?=
+ =?Windows-1252?Q?YewYPqYBLcjUyRNkzjoqrffnMKgBp1csw3xagprmtcXEOybD/+rb0Qxp?=
+ =?Windows-1252?Q?SXgm84zEE/ex0OIw/R/XCP5G2YAsGo0ZOVCabm+3P9Shb2pGxd6wyYGt?=
+ =?Windows-1252?Q?S3E7jN76TI/FIRGT+xbkWrrj3RwWXUo4UellpwFoj7dQaxeGiOqB1T4K?=
+ =?Windows-1252?Q?0IK44EHU3vcip3kBKXfWy4IE1Ij/lLKSQONk+sfRBensw1lg/dZG0oyA?=
+ =?Windows-1252?Q?U51G2mgnZxEzpxJFlIZOqemAIbA/6I2/psxys0uRaJB7Z98k12RpHSZo?=
+ =?Windows-1252?Q?YEB9SdeX?=
+x-ms-exchange-antispam-messagedata-1: pB7AZzYHI14KDuTKW577TB3q6uyOu4uv6yg=
+Content-Type: multipart/alternative;
+	boundary="_000_DS4PR21MB6583EF1238910028FF5BABDDD6152DS4PR21MB6583namp_"
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DS4PR21MB6583.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 386364be-da58-4064-300e-08debfe0807b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Jun 2026 13:20:08.1770
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: aAk2XKuVPaaHsmlFjt9+iEeU7LkQeeDgXVeq1rfMEMRWBgBs2V4tihYfcC+0VLQ+TCLCWR/IC1eK1Ky1OCVe3A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR21MB3404
+
+--_000_DS4PR21MB6583EF1238910028FF5BABDDD6152DS4PR21MB6583namp_
+Content-Type: text/plain; charset="Windows-1252"
+Content-Transfer-Encoding: quoted-printable
+
+Sure. Catherine=92s e-mail is catherinearamsey@msn.com
+
+I don=92t think I have her phone number, though I may be able to ask around=
+ for it if it is really important.
+
+Sebastian
+
+Get Outlook for iOS<https://aka.ms/o0ukef>
+________________________________
+From: Nikolaj Bjorner <nbjorner@microsoft.com>
+Sent: Sunday, 31 May 2026 20:09:57
+To: Sebastian Burckhardt <sburckha@microsoft.com>; Mooly Sagiv <mooly@certo=
+ra.com>
+Subject: Email
+
+Hi Sebastian,
+
+Di you have email or better, phone, of Tom's wife?
+
+Sent from my T-Mobile 5G Device
+Get Outlook for Android<https://aka.ms/AAb9ysg>
+
+--_000_DS4PR21MB6583EF1238910028FF5BABDDD6152DS4PR21MB6583namp_
+Content-Type: text/html; charset="Windows-1252"
+Content-Transfer-Encoding: quoted-printable
+
+<html>
+<head>
+<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3DWindows-1=
+252">
+</head>
+<body>
+<div style=3D"font-family: Aptos, -apple-system, HelveticaNeue, sans-serif;=
+font-size: 12pt">
+<div dir=3D"ltr" style=3D"font-family: Aptos, Aptos_MSFontService, -apple-s=
+ystem, Roboto, Arial, Helvetica, sans-serif; font-size: 12pt; color: rgb(0,=
+ 0, 0);">
+Sure. Catherine=92s e-mail is catherinearamsey@msn.com</div>
+<div dir=3D"ltr" style=3D"font-family: Aptos, Aptos_MSFontService, -apple-s=
+ystem, Roboto, Arial, Helvetica, sans-serif; font-size: 12pt; color: rgb(0,=
+ 0, 0);">
+<br>
+</div>
+<div dir=3D"ltr" style=3D"font-family: Aptos, Aptos_MSFontService, -apple-s=
+ystem, Roboto, Arial, Helvetica, sans-serif; font-size: 12pt; color: rgb(0,=
+ 0, 0);">
+I don=92t think I have her phone number, though I may be able to ask around=
+ for it if it is really important.</div>
+<div dir=3D"ltr" style=3D"font-family: Aptos, Aptos_MSFontService, -apple-s=
+ystem, Roboto, Arial, Helvetica, sans-serif; font-size: 12pt; color: rgb(0,=
+ 0, 0);">
+<br>
+</div>
+<div dir=3D"ltr" style=3D"font-family: Aptos, Aptos_MSFontService, -apple-s=
+ystem, Roboto, Arial, Helvetica, sans-serif; font-size: 12pt; color: rgb(0,=
+ 0, 0);">
+Sebastian</div>
+</div>
+<div id=3D"ms-outlook-mobile-body-separator-line" style=3D"font-family: Apt=
+os, -apple-system, HelveticaNeue, sans-serif;font-size: 12pt" dir=3D"auto">
+<br>
+</div>
+<div id=3D"ms-outlook-mobile-signature" style=3D"font-family: Aptos, -apple=
+-system, HelveticaNeue, sans-serif;font-size: 12pt">
+Get <a href=3D"https://aka.ms/o0ukef">Outlook for iOS</a></div>
+<hr style=3D"display:inline-block;width:98%" tabindex=3D"-1">
+<div id=3D"divRplyFwdMsg" dir=3D"ltr"><font face=3D"Calibri, sans-serif" st=
+yle=3D"font-size:11pt" color=3D"#000000"><b>From:</b> Nikolaj Bjorner &lt;n=
+bjorner@microsoft.com&gt;<br>
+<b>Sent:</b> Sunday, 31 May 2026 20:09:57<br>
+<b>To:</b> Sebastian Burckhardt &lt;sburckha@microsoft.com&gt;; Mooly Sagiv=
+ &lt;mooly@certora.com&gt;<br>
+<b>Subject:</b> Email</font>
+<div>&nbsp;</div>
+</div>
+<div>
+<div dir=3D"auto" style=3D"font-family:Aptos,Aptos_MSFontService,-apple-sys=
+tem,Roboto,Arial,Helvetica,sans-serif; font-size:12pt; color:rgb(33,33,33)"=
+>
+Hi Sebastian,</div>
+<div dir=3D"auto" style=3D"font-family:Aptos,Aptos_MSFontService,-apple-sys=
+tem,Roboto,Arial,Helvetica,sans-serif; font-size:12pt; color:rgb(33,33,33)"=
+>
+<br>
+</div>
+<div dir=3D"auto" style=3D"font-family:Aptos,Aptos_MSFontService,-apple-sys=
+tem,Roboto,Arial,Helvetica,sans-serif; font-size:12pt; color:rgb(33,33,33)"=
+>
+Di you have email or better, phone, of Tom's wife?</div>
+<div id=3D"x_ms-outlook-mobile-body-separator-line" data-applydefaultfontst=
+yles=3D"true" dir=3D"auto" style=3D"font-family:Aptos,Aptos_MSFontService,-=
+apple-system,Roboto,Arial,Helvetica,sans-serif; font-size:12pt">
+<div dir=3D"auto" style=3D"font-family:Aptos,Aptos_MSFontService,-apple-sys=
+tem,Roboto,Arial,Helvetica,sans-serif; font-size:12pt">
+<br>
+</div>
+</div>
+<div id=3D"x_ms-outlook-mobile-signature" dir=3D"auto" style=3D"font-family=
+:Aptos,Aptos_MSFontService,-apple-system,Roboto,Arial,Helvetica,sans-serif;=
+ font-size:12pt; color:rgb(33,33,33)">
+<span style=3D"font-family:Aptos,Aptos_MSFontService,-apple-system,Roboto,A=
+rial,Helvetica,sans-serif; font-size:12pt; color:rgb(33,33,33)">Sent from m=
+y T-Mobile 5G Device</span><br>
+<span style=3D"font-family:Aptos,Aptos_MSFontService,-apple-system,Roboto,A=
+rial,Helvetica,sans-serif; font-size:12pt; color:rgb(33,33,33)">Get
+</span><span style=3D"font-family:Aptos,Aptos_MSFontService,-apple-system,R=
+oboto,Arial,Helvetica,sans-serif; font-size:12pt"><a href=3D"https://aka.ms=
+/AAb9ysg" originalsrc=3D"https://aka.ms/AAb9ysg">Outlook for Android</a></s=
+pan></div>
+</div>
+</body>
+</html>
+
+--_000_DS4PR21MB6583EF1238910028FF5BABDDD6152DS4PR21MB6583namp_--

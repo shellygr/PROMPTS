@@ -42,3 +42,12 @@ I do not know what is the deployment process for the cloud infrastructure itself
 With AutoProver (AISS historical name) I only know the deployment is similar to Prover in the sense that we upload containers to ECR and they already contain the relevant part when built. Thus if we trigger a new container build and push to ECR on the right tag it is likely the API will invoke it. As far as I know it was only deployed on dev.
 
 [enacted on fable with max]
+
+----------------
+
+  1. Who runs the manual deploys for cloud-infrastructure / data-processors / aws-templates today, and is there a runbook beyond the repo docs? (Process knowledge — important given the team shrinkage.)
+  2. Is AISS deployed beyond dev? CDK defines stg/prod stacks; checking needs aws cloudformation describe-stacks per account. You believe dev only — easy to confirm once you want me to run read-only AWS calls.
+  3. httpHandlerContainer prod — no prod path in the repo; how its Beanstalk env gets updated and what still depends on it.
+  4. Railway topology for zeus-saas/orchestrator — projects, environments, access. Lives in Railway, not git.
+  5. Prover promotion cadence — confirmed manual (no scheduler); the who/when/checks is team process.
+  6. Secrets ownership — org-level CI secrets (CIRCLE_TOKEN, OIDC roles, DEPLOY_KEY_*, opscertora PyPI) need an owner/rotation inventory; a resilience task worth scheduling.
