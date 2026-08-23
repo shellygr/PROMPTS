@@ -1,4 +1,5 @@
 # Coverage for solidity specs
+## Initial [in progress 90%]
 New project, new repo, `SoliditySpecCoverage`. Create the repo here, and put your insight and plans into a docs/ folder within so that we track our requirements, design choices, algorithms, and evolution.
 
 Our goal is to write a tool that consumes a list of certora conf files and produces an evaluation of coverage w.r.t. 
@@ -41,19 +42,75 @@ Update in docs/ your initial plan for implementation and I'll give feedback. You
 
 =====
 
-UX for speccov
+## UX for speccov [todo]
 
 the speccov tool should have a mode where it analyzes the git repo in full and produces an html report.
 in particular you should take note of the work done in jobdiff tool as we want to reuse it and use it as a dependency for relevant software parts.
 the left pane should show in the top a branch selector. upon selecting a branch, the left pane will show a list of all commits and their headlines.
 the left pane should be resizable.
-the latest commit appears first. on the left we'll see its score in a circle.
+the latest commit appears first. on the left of it, we'll see its score in a circle.
 if the commit changes code, its text will have an underline.
 the color of the commit's text indicates the score trend with the previous commit: red for going down, green for up, grey for neutral.
-the right pane should show the actual spec diff a-la job diff.
-take note to not fill up the disk with redundant AST. It should try to be as slim as possible in disk writes since those are one-time and not interesting, and for a large project with many commits we may have many files written. 
+the right pane should show two elements.
+1. an explanation of how the score was computed for each of the components and the overall score.  use drop downs to avoid condensation of elements.
+2. the actual spec diff a-la job diff.
+
+technical implementation note.
+take note to not fill up the disk with redundant ASTs and other large files. 
+It should try to be as slim as possible in disk writes since those are one-time and not interesting, and for a large project with many commits we may have many files written. 
 the speccov should show its progress when in this mode.
-it should interact with git carefully, taking the repo as argument, and indexing everything computed very compactly.
-it should use parallelism where possible.
+speccov should use concurrency.
+it should interact with git carefully, taking the repo as argument, cloning to a temp folder, and indexing everything computed very compactly.
 here caching should be used because in case we run on the same repo again we don't want to recompute things.
-it may make sense to use a local sqlite database to ensure consistency and caching works.
+it may make sense to use a local sqlite database to ensure consistency by forcing a schema, and caching works. use pydantic for classes if you haven't done it so far.
+
+## Standardizes scores [in progress]
+Propose ways in which the score can be standardized across different projects and different source versions. For example, I am pretty sure C3, C4 and C5 should take into account only non-view and non-pure functions. I also think the scoring for immutables should be different than scoring of storage fields and complex paths (e.g. mapping m[address][uint256] to a uint256, arrays, etc...) that change in multiple places of the code, refining C1. The result of your investigation should be emitted to a file scoring-review-aug23-2026.md in docs folder.
+
+## impact of input arguments [todo]
+one tricky aspect of FV is that it does not know what it does not know. what I mean by that is that there is a large family of bugs
+related to insufficient input validation. the problem is that if the code does not validate an input, the blindspot in many cases persists in the spec.
+to avoid that, we want to score for each mutable (non view and non pure) external/public function, not only that it appears in this and many rules, but also
+that its inputs participate in either requires or asserts in signifcant ways. so if an input value flows into a hash function and we require something on the hash function,
+this contributes something to coverage. if it's then participating in an assertion, too. I want to be careful about distinguishing requires and asserts because we understand that some asserts can be written using implication and effectively being empty (false implies everything).
+on the other hand some inputs are opaque and are supposed to be. it's okay that they're penalizing the code by a bit.
+we should compute how many of the input arguments (count struct fields separately, deepest level) are flowing into requires or asserts out of all input arguments. the percentage is the score for this aspect of the overall score (we can call it C6).
+
+## normalizing for tricky assertions [todo]
+there's a way to trick us a bit, by pushing requires into assertions.
+e.g. a require P; C; assert Q; can be also written, roughly, as C1; C; assert P => Q;
+this is bad for us because we understand this can hide vacuous P's. I want to deincentivize such writing.
+if there's just one assert in the rule, the normalizer should run an additional pass on top of the one that rewrites getters, which will do as follows:
+it will convert the assert P => Q; into require P; assert Q;
+if there's more than one assert with this form, it will prune out the rule, which should affect adversely on the score (it would also need to tell the user the reason for this penalty).
+
+## Review, from Codex [written, to be applied]
+shelly/codex-review
+
+## Best-effort unsat core computation [in progress]
+Let's introduce a second potential input for speccov, which is a json file with a list of all Prover runs that correspond to this project.
+our goal is to use this for computing a second score based on unsat cores.
+the components that we need to build here are related to downloading, fetching, resubmitting with, coverage info advanced information from the prover, and
+analyzing the unsat core txt files similarly to how it is done for sanity in autosetup module.
+therefore, the new software components should be clearly separated from the synatctical based approaches we implemented earlier,
+while reusing software components from dependencies as I describe here.
+
+for each one of the run links provided, we should download the outputs. use ProverOutputUtility API to download sources and unsat core outputs with ease, use most recent version of it.
+specifically: `extract_unsat_core_files` from `src/prover_output_utility/api/main.py`.
+if there is coverage info advanced mode in the confs, we take the available information from there.
+if not, we rerun the spec with coverage info and hope the result does not timeout.
+if the result timesout then we mark all lines of code as 'unknown' (orange).
+if we have any sort of coverage info we parse it to get the covered and uncovered parts of the code.
+any line of code covered by at least one rule is considered covered (green).
+any line of code not covered by any rule is conisdered uncovered (red).
+lines of code that do not contain statements e.g. containing a `{` alone, should not be counted or marked with any color, similarly comment-only,
+function declarations, imports, pragmas, blanks.
+if there are partially covered lines they will constitute 50% cover (yellow).
+The score is then the ratio betwee green lines vs green+yellow+orange+red in the denominator.
+
+finally, before we start the computation based on unsat cores, we need to make sure that the set of run links we got is indeed fully covering all the conf files and all the rules that are checked, aggregated, by all conf files.
+this should be written in a separate component as we'll use run links for more metrics later, and should be done in a separate module.
+
+## Mutation testing, efficient [tbd]
+The idea is to first generate a wide set of 'test' data that can be used to kill mutants quickly.
+for each rule we'll build such a suite of tests. rules may share a test suite if they call the same set of non-view and non-pure methods.
