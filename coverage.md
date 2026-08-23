@@ -38,3 +38,22 @@ I'll have more ideas later. For now, start drafting the different software compo
 Our goal is to write GOOD and MAINTAINABLE code, not rely on regex or string ops, and be SOUND in our analysis.
 You can explore docs.certora.com for more info about CVL and its semantics, and you have various repos and data sources available as well.
 Update in docs/ your initial plan for implementation and I'll give feedback. You may split it to multiple files with different modules that would be independent of each other but nevertheless useful in the final scoring algorithm.
+
+=====
+
+UX for speccov
+
+the speccov tool should have a mode where it analyzes the git repo in full and produces an html report.
+in particular you should take note of the work done in jobdiff tool as we want to reuse it and use it as a dependency for relevant software parts.
+the left pane should show in the top a branch selector. upon selecting a branch, the left pane will show a list of all commits and their headlines.
+the left pane should be resizable.
+the latest commit appears first. on the left we'll see its score in a circle.
+if the commit changes code, its text will have an underline.
+the color of the commit's text indicates the score trend with the previous commit: red for going down, green for up, grey for neutral.
+the right pane should show the actual spec diff a-la job diff.
+take note to not fill up the disk with redundant AST. It should try to be as slim as possible in disk writes since those are one-time and not interesting, and for a large project with many commits we may have many files written. 
+the speccov should show its progress when in this mode.
+it should interact with git carefully, taking the repo as argument, and indexing everything computed very compactly.
+it should use parallelism where possible.
+here caching should be used because in case we run on the same repo again we don't want to recompute things.
+it may make sense to use a local sqlite database to ensure consistency and caching works.
