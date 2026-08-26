@@ -1,5 +1,5 @@
 # Coverage for solidity specs
-## Initial [in progress 90%]
+## Initial [done]
 New project, new repo, `SoliditySpecCoverage`. Create the repo here, and put your insight and plans into a docs/ folder within so that we track our requirements, design choices, algorithms, and evolution.
 
 Our goal is to write a tool that consumes a list of certora conf files and produces an evaluation of coverage w.r.t. 
@@ -42,7 +42,7 @@ Update in docs/ your initial plan for implementation and I'll give feedback. You
 
 =====
 
-## UX for speccov [todo]
+## UX for speccov [done-almost]
 
 the speccov tool should have a mode where it analyzes the git repo in full and produces an html report.
 in particular you should take note of the work done in jobdiff tool as we want to reuse it and use it as a dependency for relevant software parts.
@@ -64,6 +64,9 @@ it should interact with git carefully, taking the repo as argument, cloning to a
 here caching should be used because in case we run on the same repo again we don't want to recompute things.
 it may make sense to use a local sqlite database to ensure consistency by forcing a schema, and caching works. use pydantic for classes if you haven't done it so far.
 
+note that this work should not be affected by the changes we do to scoring in other branches. if the current way we are fed scores is not sufficiently modular,
+report so, and still continue to build the rest of the UX while leaving a doc instructing and recommending how to build the reportage in a more compatible way with integrations such as the UX.
+
 ## Standardizes scores [in progress]
 Propose ways in which the score can be standardized across different projects and different source versions. For example, I am pretty sure C3, C4 and C5 should take into account only non-view and non-pure functions. I also think the scoring for immutables should be different than scoring of storage fields and complex paths (e.g. mapping m[address][uint256] to a uint256, arrays, etc...) that change in multiple places of the code, refining C1. The result of your investigation should be emitted to a file scoring-review-aug23-2026.md in docs folder.
 
@@ -84,7 +87,10 @@ if there's just one assert in the rule, the normalizer should run an additional 
 it will convert the assert P => Q; into require P; assert Q;
 if there's more than one assert with this form, it will prune out the rule, which should affect adversely on the score (it would also need to tell the user the reason for this penalty).
 
-## Review, from Codex [written, to be applied]
+## native balances blindspot [todo]
+If the contract contains any payable method, we penalize if `nativeBalances` is not reasoned about as if it was part of the contract state in [C1], [C2].
+
+## Review, from Codex [done]
 shelly/codex-review
 
 ## Best-effort unsat core computation [in progress]
