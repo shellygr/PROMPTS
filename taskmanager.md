@@ -18,9 +18,20 @@ PATCH /tasks/{id}     {status: done|blocked, result: "..."}
 source matters: tasks I gave you should be harder to close than notes I wrote myself, and I should never silently drop a user one.
 
 - a cli tool that you would actually use, I don't want you to call the API directly.
-- a web browser frontend that I can access via localhost on port 9999 or some other port number. From there I should be able to see all sessions with tasks within, open new ones (using my own source, not claude source), all sorted in various ways (default: last update, descending newest to oldest), in tabular form with subtasks. it should fully support english and hebrew. there should be a priority tag attached to each. there is an optional repository tag too so we can associated relevant code repos. there should also be a category tag attachable. pleasant coloring. show last backup date of the db and where db backups are stored. I suggest to keep them on git too. note that the web requirements affect also the db schema and the API form. 
-- the stop hook that checks for tasks on the current conversation
+- a web browser frontend that I can access via localhost on port 9999 or some other port number. From there I should be able to see all sessions with tasks within, open new ones (using my own source, not claude source), all sorted in various ways (default: last update, descending newest to oldest), in tabular form with subtasks. 
+features:
+- - it should fully support english and hebrew.
+- - there should be a priority tag attached to each (urgent/non-urgent). 
+- - there is an optional repository tag too so we can associated relevant code repos. multiple repos could be attached.
+- - there should also be a category tag attachable. 
+- - pleasant coloring. 
+- - in the header, show last backup date of the db and where db backups are stored. I suggest to keep them on git too.
+- - the user should be able to sort between task rows, as long as urgent ones are above non-urgent ones
 
-the repo for this project should be called TaskManagerForAgents, be hosted on shellygr, and there should also be a repo for dbs called TaskManagerForAgentsBackups.
+note that the web requirements affect also the db schema and the API form. 
 
-I also want to add an option to put not just tasks but also "Notes". those notes can be useful for you to record memory relevant to a specific conversation and export those into your memory.
+- the stop hook that checks for tasks on the current conversation / session
+
+the repo for this project should be called TaskManagerForAgents, be hosted on shellygr, and there should also be a repo for dbs called TaskManagerForAgentsBackups also on shellygr.
+
+I also want to add an option to put not just tasks, but also "Notes". those notes can be useful for you to record memory relevant to a specific conversation and export those into your memory. the user should also be able to put various notes into conversations.
